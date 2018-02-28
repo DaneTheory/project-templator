@@ -31,7 +31,7 @@ See [example/index.js](example/index.js)
 ## Usage
 
 ```js
-const projectTemplate = require('project-template');
+const { projectTemplate, projectTemplates } = require('project-template');
 
 projectTemplate({
   templatePath: '/path/to/templates',
@@ -48,6 +48,22 @@ projectTemplate({
 })
 .then(files => console.log('Done', files))
 .catch(err => console.error('Error', err));
+
+
+projectTemplates({
+  src: {
+    templatePath: '/path/to/templates/src',
+    buildPath: '/path/to/build/lib'
+    // ... more src template options
+  },
+  test: {
+    templatePath: '/path/to/templates/test',
+    buildPath: '/path/to/build/tests'
+    // ... more test template options
+  }
+}, {
+  // generic templating options used as defaults
+})
 ```
 
 ## Advanced example
@@ -161,6 +177,7 @@ projectTemplate({
 
 ### projectTemplate(options) -&gt; Promise&lt;Array&lt;String&gt;&gt;
 
+### projectTemplates(tmplMap, options)
 
 ### Custom template engine
 
@@ -169,6 +186,63 @@ You could integrate your own templating engine...
 - [Sao custom-template-engine](https://sao.js.org/#/create?id=custom-template-engine)
 - [Kopy](https://github.com/saojs/kopy)
 - [jstransformers](https://github.com/jstransformers/jstransformer#api)
+
+### tree/object transformer
+
+We have included a new type of transformer specifically designed to create nested structures such as `js`, `JSON` or `YAML` objects without the unnatural fit of traditional text based templates.
+
+Here is how it looks in action for generating part of a `package.json` file.
+This is pure JavaScript code, which is executed in a [vm2 sandbox](https://www.npmjs.com/package/vm2).
+[powerdash](https://www.npmjs.com/package/powerdash) functions are made available inside via `_` so you have all the power of [lodash](https://www.npmjs.com/package/lodash), [string.js](https://www.npmjs.com/package/string) and [underscore.string](https://www.npmjs.com/package/underscore.string) with a unified API.
+
+```js
+ctx.treeDef = {
+  opts: {
+    type: 'js',
+    indent: 4
+  },
+  base: {
+    // baseline object
+  },
+  parts: {
+    author({
+      author
+    }) {
+      return _.humanize(author)
+    },
+    repo({
+      username,
+      name
+    }) {
+      return {
+        url: `...github/${_.lowercase(username)}/${name}/...`
+      }
+    }
+  }
+}
+```
+
+Currently we don't yet have it "built in", so to use it see `src/transformers/sandbox.test.js` for an example, then do sth like:
+
+```js
+const {
+  transformTree,
+  sandboxed
+} = require('project-template')
+
+const renderTemplate = (templateFile, params, entry) => {
+  // TODO: use sandboxed with transformTree to transform templateFile
+  // when entry matches certain criteria
+  // for other entry types use suitable template renderers
+}
+
+// then pass renderTemplate as an option
+projectTemplate({
+  // ...
+  renderTemplate,
+  // ...
+})
+```
 
 ### options
 

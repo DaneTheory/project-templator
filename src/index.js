@@ -1,5 +1,12 @@
 const options = require('./options')
 
+const projectTemplates = (tmplMap, options) => {
+  return Object.keys(tmplMap).map(key => {
+    const opts = Object.assign(options, tmplMap[key] || {})
+    return projectTemplate(opts)
+  })
+}
+
 const projectTemplate = ({
   fileExtension = 'ect',
   templatePath,
@@ -43,4 +50,14 @@ const projectTemplate = ({
   ))
 })
 
-module.exports = projectTemplate;
+const {
+  transformTree,
+  sandboxed
+} = require('./transformers')
+
+module.exports = {
+  projectTemplate,
+  projectTemplates,
+  transformTree,
+  sandboxed
+}

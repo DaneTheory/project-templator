@@ -2,9 +2,9 @@
   "name": "project-template",
   "version": "1.2.0",
   "description": "Generate a project based on a directory of template files and corresponding template values",
-  "main": "src/index.js",
+  "main": "src",
   "scripts": {
-    "example": "node example/index.js"
+    "example": "node example"
   },
   "keywords": [
     "generate",
@@ -29,8 +29,13 @@
   "dependencies": {
     "ect": "^0.5.9",
     "escape-string-regexp": "^1.0.5",
+    "json2yaml": "^1.1.0",
     "lodash": "^4.17.5",
     "mkdirp": "^0.5.1",
-    "recursive-readdir": "^2.2.2"
+    "powerdash": "^1.1.0",
+    "recursive-readdir": "^2.2.2",
+    "sandbox": "^0.8.6",
+    "stringify-object": "^3.2.2",
+    "vm2": "^3.5.2"
   }
 }

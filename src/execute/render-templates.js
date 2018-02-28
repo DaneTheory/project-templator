@@ -30,7 +30,7 @@ module.exports = function ({
           templateFile,
           fileParams
         })
-        return renderTemplate(templateFile, params)
+        return renderTemplate(templateFile, params, entry)
       }
 
       function readIt() {
