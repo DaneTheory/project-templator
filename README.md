@@ -44,12 +44,87 @@ projectTemplate({
 .catch(err => console.error('Error', err));
 ```
 
+## Advanced example
+
+Say we have a template with the following structure.
+We have variants for the source files, ie. :
+
+- `.ts` when using TypeScript
+- `.js` when using CommonJS
+- `.mjs` when using ES6 modules and ES2015+ javascript
+
+```bash
+/template
+  /src
+    index.ts.ect
+    index.js.ect
+    index.mjs.ect
+    /helpers
+      index.ts.ect
+      index.js.ect
+      index.mjs.ect
+  /test
+    my-ava.test.js
+  /__tests__
+    my-jest.test.js
+```
+
+We would like the following project build output:
+
+```bash
+/my/target
+  /src
+    index.ts
+    /helpers
+      index.ts
+  /__tests__
+    my-jest.test.js
+```
+
+```js
+projectTemplate({
+  templatePath: '/path/to/templates',
+
+  // select template file to use based on srcExt option
+  resolveTemplateFile(file, opts) {
+    const ext = path.extname(file)
+    const destExt = ext === 'js' ? opts.srcExt : ext
+    return path.join(path.basename(file), destExt)
+  },
+  ignore(file, opts) {
+    return opts.testLib === 'jest' ? file.test(/\/__tests__/) : file.test(/\/test\//)
+  }
+  // rename any template files that have .js extension to .ts in target dest
+  // in this case we don't really need it since
+  // we already have the right extension via resolveTemplateFile
+  buildPath(file, opts) {
+    const ext = path.extname(file)
+    const destExt = ext === 'js' ? 'ts' : ext
+    return path.join(opts.rootBuildPath, path.basename(file), destExt)
+  },
+  opts: {
+    srcExt: 'ts', // used by resolveTemplateFile
+    rootBuildPath: '/path/to/build' // used by buildPath
+    testLib: 'ava' // used by ignore
+  },
+  params: {
+    'a/file.js': {
+      firstParam: 'First param value',
+      secondParam: 'Second param value',
+    },
+    'a/b/file.js': {
+      anotherParam: 'Another param value',
+    },
+  },
+})
+```
+
 ## Things to keep in mind
 
 - Template files are expected to use [ect](https://github.com/baryshev/ect) syntax
-- Directory structure of files in `templatePath` is maintained in `buildPath`
+- Directory structure of files in `templatePath` is by default maintained in `buildPath`
 - All files in `templatePath` with `fileExtension` must be included in `params`
-- Files in `templatePath` without `fileExtension` are just copied over to `buildPath`
+- Files in `templatePath` without `fileExtension` as extension (ie usually `.ect`) are just copied over to `buildPath` as they are
 - You cannot have two files with the same file path where one has `fileExtension` and the other doesn't
 
 ## API
