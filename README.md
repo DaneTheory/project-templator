@@ -93,7 +93,7 @@ projectTemplate({
   },
   ignore(file, opts) {
     return opts.testLib === 'jest' ? file.test(/\/__tests__/) : file.test(/\/test\//)
-  }
+  },
   // rename any template files that have .js extension to .ts in target dest
   // in this case we don't really need it since
   // we already have the right extension via resolveTemplateFile
