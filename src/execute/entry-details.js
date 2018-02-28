@@ -3,6 +3,7 @@ module.exports = function (config) {
     extensionPattern,
     resolveFileType,
     resolveFolderType,
+    resolveEntityType,
     resolveParams,
     populateEntry,
     info
@@ -23,8 +24,11 @@ module.exports = function (config) {
         opts: config.opts, // for convenience
         name: path.basename(filePath),
         dirName: path.dirname(filePath),
-        type: resolveFileType(entry),
-        folder: resolveFolderType(entry),
+        type: {
+          file: resolveFileType(entry),
+          entity: resolveEntityType(entry),
+          folder: resolveFolderType(entry),
+        },
         isTemplate: extensionPattern.test(filePath)
       }
       entry.params = resolveParams(entry)

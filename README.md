@@ -97,8 +97,10 @@ projectTemplate({
     return entry
   },
   // select template file to use based on srcExt option
-  resolveTemplateFile({destExt, name}) {
-    return path.join(name, destExt)
+  resolve: {
+    templateFile({destExt, name}) {
+      return path.join(name, destExt)
+    }
   },
   // ignore template files in folders that don't match convention of test library used
   ignore({dirName}) {
@@ -126,9 +128,21 @@ projectTemplate({
       },
     }
     type: {
-      src(entry) {
-        return {
-          // dynamic params based on entry
+      folder: {
+        test: {
+          // ...
+        }
+      },
+      file: {
+        src(entry) {
+          return {
+            // dynamic params based on entry
+          }
+        }
+      },
+      entity: {
+        service: {
+          // ...
         }
       }
     }
@@ -158,10 +172,7 @@ projectTemplate({
 | fileExtension | String | No | `ect` | File extension of template files |
 |  ignore | Function | No | undefined | Whether to ignore file |
 |  opts | Object | No | {} | Global options |
-| resolveTemplateFile | Function | No | undefined | Resolve template file to use from entry |
-| resolveFileType | Function | No | undefined | Determine file type from entry |
-| resolveFolderType | Function | No | undefined | Determine folder type from entry |
-| resolveParams | Function | No | undefined | Custom function to resolve params for entry |
+| resolve | Function[] | No | {} | Set of custom resolver functions (see below) |
 | populateEntry | Function | No | undefined | Custom function to populate entry |
 | createTemplateRenderer | Function | No | undefined | Create custom template renderer for config |
 | extTypeMap | Object | No | {} | Map used by resolveFileType to determine type of file |
@@ -179,13 +190,50 @@ The `entry` that is passed on in each step consists of the following:
 
 - `filePath` file path of the template (stripped of the template extension) such as `src/index.js`
 - `name` name of the file such as `index`
+- `dirName` name of directory
 - `ext` file extension (such as `js`)
-- `type` file type determined, such as `source`
-- `folder` folder type determined, such as `test`
+- `type` (Object) type of file including `folder`, `file` and `entity`
+- `params` (Object) the params resolved for this entry to be passed to template for rendering
 - `config` the full configuration passed to `projectTemplate`
 - `isTemplate` if it is a template to be rendered with params
 
 You can use `populateEntry` option to pass a function to further customize the entry being used to suit your specific needs.
+
+```js
+
+$Path: '/src/helpers/service-finder.ts',
+filePath: 'src/helpers/service-finder.test.ts',
+name: 'service-finder',
+ext: 'ts',
+dirName: 'src/helpers',
+isTemplate: true,
+type: {
+  file: 'test.src',
+  folder: 'helpers',
+  entity: 'service'
+},
+params: {
+  // params resolved for entry
+}
+opts: {
+  // from config.opts
+},
+config: {
+  // ... all the "global" configs passed
+}
+```
+
+#### resolve
+
+The `resolve` option can be used to pass one or more custom resolver functions.
+
+| Key | Type | Required | Default | Notes |
+| --- | --- | --- | --- | --- |
+| templateFile | Function | No | undefined | Resolve template file to use from entry |
+| fileType | Function | No | undefined | Determine file type from entry |
+| folderType | Function | No | undefined | Determine folder type from entry |
+| entityType | Function | No | undefined | Determine entity type from entry |
+| params | Function | No | undefined | Custom function to resolve params for entry |
 
 #### params
 

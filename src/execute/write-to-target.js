@@ -15,19 +15,20 @@ module.exports = function ({
   appendWith,
   info
 }) {
+  const getData = (srcMap, type) => {
+    const src = srcMap[type.file] || srcMap[type.folder] || srcMap[type.entity]
+    return typeof src === 'string' ? src : src(entry)
+  }
+
   const defaultTransformFileData = (entry) => {
     const {
       data,
       type,
-      folder,
       info
     } = entry
 
-    const prepender = prependWith[type] || prependWith[folder]
-    const prependData = typeof prepender === 'string' ? prepender : prepender(entry)
-
-    const appender = appendWith[type] || appendWith[folder]
-    const appendData = typeof appender === 'string' ? appender : appender(entry)
+    const prependData = getData(prependWith, type)
+    const appendData = getData(appendWith, type)
 
     let fileData = []
     prependData && fileData.push(prependData)

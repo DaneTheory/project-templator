@@ -15,10 +15,7 @@ module.exports = function (config) {
     ignoreFiles,
     opts,
     buildPath,
-    resolveFileType,
-    resolveFolderType,
-    resolveTemplateFile,
-    resolveParams,
+    resolve,
     createTemplateRenderer,
     extTypeMap,
     folderTypeMap,
@@ -26,6 +23,13 @@ module.exports = function (config) {
     prependWith,
     appendWith
   } = config
+
+  resolve = resolve || {}
+  let resolveFileType = resolve.fileType
+  let resolveFolderType = resolve.folderType
+  let resolveEntityType = resolve.entityType
+  let resolveTemplateFile = resolve.templateFile
+  let resolveParams = resolve.params
 
   assert.strictEqual(typeof fileExtension, 'string', 'fileExtension must be a string');
   assert.strictEqual(typeof templatePath, 'string', 'templatePath must be a string');
@@ -42,6 +46,7 @@ module.exports = function (config) {
     assert.strictEqual(typeof resolveTemplateFile, 'function', 'resolveTemplateFile must be a function');
   }
   resolveTemplateFile ? resolveTemplateFile : (file) => file
+  resolveEntityType = resolveEntityType ? resolveEntityType : () => 'unknown'
 
   assert(Array.isArray(ignoreFiles), 'ignoreFiles must be an array');
   assert(ignoreFiles.every(file => (typeof file === 'string' || file instanceof RegExp)), 'ignoreFiles must only contain strings or regular expressions');
@@ -73,20 +78,38 @@ module.exports = function (config) {
     return matchers.map(m => m.concat('/')).map(toRegExp)
   })
 
-  function defaultResolveParams(entry) {
-    const {
-      params
-    } = entry
-    return result = ['filePath', 'name', 'type', 'folder', 'ext'].reduce((acc, key) => {
-      const config = params[key] || {}
-      const entryKey = entry[key]
+  function $resolveParams(keys, {
+    entry,
+    nestedKey,
+    params
+  }) {
+    return keys.reduce((acc, key) => {
+      const config = (nestedKey ? params[nestedKey][key] : params[key]) || {}
+      const entryKey = (nestedKey ? entry[nestedKey][key] : entry[key])
       const lookup = config[entryKey]
       const entryParams = (typeof lookup === 'function' ? lookup(entry) : lookup) || {}
       acc = Object.assign(acc, entryParams)
       return acc
     }, {})
+  }
 
-    return Object.assign(result, params.default || {})
+  function defaultResolveParams(entry) {
+    const {
+      params
+    } = entry
+
+    return $params = $resolveParams(['filePath', 'name', 'ext'], {
+      entry,
+      params
+    })
+
+    return $typeParams = $resolveParams(['file', 'entity', 'folder'], {
+      entry,
+      nestedKey: 'type',
+      params
+    })
+
+    return Object.assign($params, $typeParams, params.default || {})
   }
 
   resolveParams = resolveParams || defaultResolveParams
@@ -141,6 +164,8 @@ module.exports = function (config) {
     resolveTemplateFile,
     resolveFileType,
     resolveFolderType,
+    resolveEntityType,
+    resolveParams,
     warning,
     error,
     info,
