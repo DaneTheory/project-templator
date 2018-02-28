@@ -3,10 +3,7 @@ const options = require('./options')
 const projectTemplate = ({
   fileExtension = 'ect',
   templatePath,
-  resolveTemplateFile,
-  resolveFileType,
-  resolveFolderType,
-  resolveTemplateFile,
+  resolve = {},
   createTemplateRenderer,
   extTypeMap = {
     src: ['js', 'mjs', 'ts', 'tsx', 'jsx'],
@@ -29,10 +26,7 @@ const projectTemplate = ({
 }) => Promise.resolve().then(() => {
   execute(options(fileExtension,
     templatePath,
-    resolveTemplateFile,
-    resolveFileType,
-    resolveFolderType,
-    resolveTemplateFile,
+    resolve,
     createTemplateRenderer,
     extTypeMap,
     folderTypeMap,
