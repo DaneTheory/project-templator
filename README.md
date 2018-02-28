@@ -136,10 +136,13 @@ projectTemplate({
 | Key | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
 | templatePath | String | Yes | | Directory path containing template files |
-| buildPath | String | Yes | | Directory path to write generated files to |
+| buildPath | String/Function | Yes | | Directory path to write generated files to |
 | params | Object | No | `{}` | Keys are relative paths of template files (with `fileExtension` stripped). Values are objects of template variables |
 | ignoreFiles | Array&lt;String&gt; | No | `[]` | File paths to ignore (exclude the `fileExtension` for template files). Useful for [ect partials](https://github.com/baryshev/ect#partials) |
 | fileExtension | String | No | `ect` | File extension of template files |
+|  ignore | Function | No | Whether to ignore file |
+|  opts | Object | No | Global options |
+| resolveTemplateFile | Function | No | Resolve template file to use |
 
 #### Result
 
