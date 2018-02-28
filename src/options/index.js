@@ -5,6 +5,7 @@ const assert = require('assert');
 const escapeRegExp = require('escape-string-regexp')
 const ect = require('ect');
 
+// TODO: Needs massive cleanup
 module.exports = function (config) {
   let {
     fileExtension,
@@ -16,7 +17,6 @@ module.exports = function (config) {
     opts,
     buildPath,
     resolve,
-    createTemplateRenderer,
     extTypeMap,
     folderTypeMap,
     transformFileData,
@@ -30,41 +30,43 @@ module.exports = function (config) {
   let resolveEntityType = resolve.entityType
   let resolveTemplateFile = resolve.templateFile
   let resolveParams = resolve.params
+  let resolveDestPath = resolve.destPath
+  let resolveTemplateRenderer = resolve.templateRenderer
 
   assert.strictEqual(typeof fileExtension, 'string', 'fileExtension must be a string');
   assert.strictEqual(typeof templatePath, 'string', 'templatePath must be a string');
 
-  const goodBuildPath = typeof buildPath === 'string' || typeof buildPath === 'function';
-  assert(goodBuildPath, 'buildPath must be a string or function');
+  assert(!buildPath || typeof buildPath === 'string', 'buildPath must be a string');
+
+  function defaultResolveBuildPath({
+    filePath
+  }) {
+    assert(buildPath.length > 0, 'buildPath must not be empty');
+    return path.join(buildPath, filePath)
+  }
 
   // if builPath is a string, create a builPath function that
   // simply adds the file on to the buildPath to form a full path
   // buildPath: /my/dest, file: test/index.js => /my/dest/test/index.js
-  buildPath = typeof buildPath === 'function' ? buildPath : (file) => path.join(buildPath, file)
-
-  if (resolveTemplateFile) {
-    assert.strictEqual(typeof resolveTemplateFile, 'function', 'resolveTemplateFile must be a function');
-  }
-  resolveTemplateFile ? resolveTemplateFile : (file) => file
-  resolveEntityType = resolveEntityType ? resolveEntityType : () => 'unknown'
+  resolveDestPath = typeof resolveDestPath === 'function' ? resolveDestPath : defaultResolveBuildPath
+  resolveTemplateFile = typeof resolveTemplateFile === 'function' ? resolveTemplateFile : (file) => file
+  resolveEntityType = typeof resolveEntityType === 'function' ? resolveEntityType : () => 'unknown'
 
   assert(Array.isArray(ignoreFiles), 'ignoreFiles must be an array');
   assert(ignoreFiles.every(file => (typeof file === 'string' || file instanceof RegExp)), 'ignoreFiles must only contain strings or regular expressions');
 
-  if (ignore) {
-    assert.strictEqual(typeof ignore, 'function', 'ignore must be a function');
-  }
+  ignore = typeof ignore === 'function' ? ignore : () => false
 
   assert(params && typeof params === 'object', 'params must be an object');
 
   assert(fileExtension.length > 0, 'fileExtension must not be empty');
   assert(templatePath.length > 0, 'templatePath must not be empty');
-  assert(buildPath.length > 0, 'buildPath must not be empty');
+
   assert.notStrictEqual(fileExtension, '.', 'fileExtension cannot be a dot');
 
   const extensionPattern = new RegExp(`\.${fileExtension}$`);
 
-  const ectTemplateRenderer = ect({
+  const defaultTemplateRenderer = ect({
     root: templatePath,
     ext: `.${fileExtension}`,
   });
@@ -142,9 +144,12 @@ module.exports = function (config) {
   resolveFileType = resolveFileType || defaultResolveFileType
   resolveFolderType = resolveFolderType || defaultResolveFolderType
 
-  templateRenderer = createTemplateRenderer ? createTemplateRenderer(config) : ectTemplateRenderer
+  let templateRenderer = resolveTemplateRenderer ? resolveTemplateRenderer(config) : defaultTemplateRenderer
 
-  const renderTemplate = promisify(templateRenderer.render.bind(templateRenderer));
+  // if templateRenderer is not a function, assume object that has a render method
+  templateRenderer = typeof templateRenderer === 'function' ? templateRenderer : templateRenderer.render
+  templateRenderer = templateRenderer.bind(templateRenderer)
+  const renderTemplate = promisify(templateRenderer.bind(templateRenderer));
 
   const {
     warning,
@@ -154,7 +159,6 @@ module.exports = function (config) {
 
   return {
     templatePath,
-    templateRenderer,
     renderTemplate,
     extensionPattern,
     params,
@@ -166,6 +170,7 @@ module.exports = function (config) {
     resolveFolderType,
     resolveEntityType,
     resolveParams,
+    resolveDestPath,
     warning,
     error,
     info,

@@ -7,7 +7,9 @@ const readFile = promisify(fs.readFile);
 
 module.exports = function ({
   resolveTemplateFile,
+  resolveTemplateRenderer,
   templatePath,
+  renderTemplate,
   params,
   opts,
   info

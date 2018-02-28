@@ -10,6 +10,7 @@ module.exports = function ({
   opts,
   params,
   buildPath,
+  resolveDestPath,
   transformFileData,
   prependWith,
   appendWith,
@@ -42,7 +43,7 @@ module.exports = function ({
     // each file entry is of the form: {file, isTemplate, data}
 
     files.map(entry => {
-        entry.destPath = buildPath(entry)
+        entry.destPath = resolveDestPath(entry)
         info('destPath', destPath)
         return entry
       })

@@ -108,7 +108,7 @@ projectTemplate({
   },
   // renames any files that have .js extension to .ts in target dest
   // via populateEntry custom destExt option
-  buildPath({ext, destExt, dirName}) {
+  destPath({ext, destExt, dirName}) {
     return path.join(opts.rootBuildPath, dirName, name, destExt)
   },
   opts: {
@@ -154,7 +154,7 @@ projectTemplate({
 
 - Template files are expected to use [ect](https://github.com/baryshev/ect) syntax. You can however pass your own template render function
 - Directory structure of files in `templatePath` is by default maintained in `buildPath` but can be overridden
-- Files in `templatePath` without `fileExtension` as extension (ie usually `.ect`) are just copied over to `buildPath` as they are
+- Files in `templatePath` without `fileExtension` as extension (ie usually `.ect`) are just copied over to `buildPath` (ie. `destPath`) as they are
 - You cannot have two files with the same file path where one has `fileExtension` and the other doesn't
 
 ## API
@@ -166,18 +166,17 @@ projectTemplate({
 | Key | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
 | templatePath | String | Yes | | Directory path containing template files |
-| buildPath | String/Function | Yes | | Directory path to write generated files to |
+| buildPath | String/Function | Yes | | Directory path to write generated files to (for `destPath`) |
 | params | Object | No | `{}` | Keys are relative paths of template files (with `fileExtension` stripped). Values are objects of template variables |
 | ignoreFiles | Array&lt;String&gt; | No | `[]` | File paths to ignore (exclude the `fileExtension` for template files). Useful for [ect partials](https://github.com/baryshev/ect#partials) |
 | fileExtension | String | No | `ect` | File extension of template files |
 |  ignore | Function | No | undefined | Whether to ignore file |
 |  opts | Object | No | {} | Global options |
-| resolve | Function[] | No | {} | Set of custom resolver functions (see below) |
+| resolve | Function map | No | {} | Map of custom resolver functions (see below) |
 | populateEntry | Function | No | undefined | Custom function to populate entry |
-| createTemplateRenderer | Function | No | undefined | Create custom template renderer for config |
-| extTypeMap | Object | No | {} | Map used by resolveFileType to determine type of file |
-| folderTypeMap | Object | No | {} | Map used by resolveFolderType to determine type of folder |
-| transformFileData | Function | No | undefined | Cutom function to transform data before write to disk |
+| extTypeMap | Object | No | {} | Map used by `resolveFileType` to determine type of file |
+| folderTypeMap | Object | No | {} | Map used by `resolveFolderType` to determine type of folder |
+| transformFileData | Function | No | undefined | Custom function to transform data before write to disk |
 | prependWith | Object | No | {} | Map for what to prepend with for different output types |
 | appendWith | Object | No | {} | Map for what to append with for different output types |
 |  warningsOn | Boolean | No | false | enable warnings |
@@ -234,6 +233,7 @@ The `resolve` option can be used to pass one or more custom resolver functions.
 | folderType | Function | No | undefined | Determine folder type from entry |
 | entityType | Function | No | undefined | Determine entity type from entry |
 | params | Function | No | undefined | Custom function to resolve params for entry |
+| templateRenderer | Function | No | undefined | Create custom template renderer |
 
 #### params
 
