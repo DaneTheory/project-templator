@@ -5,11 +5,20 @@ const assert = require('assert');
 const escapeRegExp = require('escape-string-regexp')
 const ect = require('ect');
 
-module.exports = function options({
-  fileExtension,
-  templatePath,
-  buildPath
-}) {
+module.exports = function (config) {
+  const {
+    fileExtension,
+    templatePath,
+    buildPath,
+    params,
+    ignore,
+    ignoreFiles,
+    opts,
+    buildPath,
+    resolveTemplateFile,
+    createTemplateRenderer
+  } = config
+
   assert.strictEqual(typeof fileExtension, 'string', 'fileExtension must be a string');
   assert.strictEqual(typeof templatePath, 'string', 'templatePath must be a string');
 
@@ -44,15 +53,34 @@ module.exports = function options({
   assert.notStrictEqual(fileExtension, '.', 'fileExtension cannot be a dot');
 
   const extensionPattern = new RegExp(`\.${fileExtension}$`);
-  const templateRenderer = ect({
+
+  const ectTemplateRenderer = ect({
     root: templatePath,
     ext: `.${fileExtension}`,
   });
 
+  templateRenderer = createTemplateRenderer ? createTemplateRenderer(config) : ectTemplateRenderer
+
   const renderTemplate = promisify(templateRenderer.render.bind(templateRenderer));
 
+  const {
+    warning,
+    error,
+    info
+  } = errorHandlers(config)
+
   return {
+    templatePath,
     templateRenderer,
-    renderTemplate
+    renderTemplate,
+    extensionPattern,
+    params,
+    ignore,
+    opts,
+    buildPath,
+    resolveTemplateFile,
+    warning,
+    error,
+    info
   }
 }

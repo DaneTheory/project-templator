@@ -2,9 +2,11 @@ const difference = require('lodash/difference');
 
 module.exports = function ({
   warning,
+  info,
   params
 }) {
   const checkParams = (files) => {
+    info('check params')
     const templateFiles = files.filter(({
         file,
         isTemplate

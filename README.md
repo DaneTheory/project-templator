@@ -140,9 +140,12 @@ projectTemplate({
 | params | Object | No | `{}` | Keys are relative paths of template files (with `fileExtension` stripped). Values are objects of template variables |
 | ignoreFiles | Array&lt;String&gt; | No | `[]` | File paths to ignore (exclude the `fileExtension` for template files). Useful for [ect partials](https://github.com/baryshev/ect#partials) |
 | fileExtension | String | No | `ect` | File extension of template files |
-|  ignore | Function | No | Whether to ignore file |
-|  opts | Object | No | Global options |
-| resolveTemplateFile | Function | No | Resolve template file to use |
+|  ignore | Function | No | undefined | Whether to ignore file |
+|  opts | Object | No | {} | Global options |
+| resolveTemplateFile | Function | No | undefined | Resolve template file to use |
+| createTemplateRenderer | Function | No | undefined | Create custom template renderer |
+|  warningsOn | Boolean | No | false | enable warnings |
+|  infosOn | Boolean | No | false | enable info messages |
 
 #### Result
 

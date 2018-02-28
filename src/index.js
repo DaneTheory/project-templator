@@ -8,6 +8,8 @@ const projectTemplate = ({
   params = {},
   ignoreFiles = [],
   ignore,
+  warningsOn,
+  infosOn,
   opts = {}
 }) => Promise.resolve().then(() => {
   execute(options(fileExtension,
@@ -17,6 +19,8 @@ const projectTemplate = ({
     params,
     ignoreFiles,
     ignore,
+    warningsOn,
+    infosOn,
     opts
   ))
 })

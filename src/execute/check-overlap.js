@@ -1,9 +1,11 @@
 const intersection = require('lodash/intersection');
 
 module.exports = function ({
-  error
+  error,
+  info
 }) {
   const checkOverlap = (files) => {
+    info('check overlap')
     const templateFiles = files.filter(({
         file,
         isTemplate
