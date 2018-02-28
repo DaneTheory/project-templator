@@ -11,7 +11,14 @@ module.exports = function ({
       }
 
       // remove leading path separator
-      return file.replace(/^[\/\\]+/, '');
+      const filePath = file.replace(/^[\/\\]+/, '')
+
+      const entry = {
+        $path: file, // full path
+        filePath: filePath
+      }
+      info('normalized entry', entry)
+      return entry
     })
   }
 

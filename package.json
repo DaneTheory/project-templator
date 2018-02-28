@@ -10,14 +10,19 @@
     "generate",
     "project",
     "template",
-    "directory"
+    "directory",
+    "boilerplate",
+    "sao",
+    "lass",
+    "comptroller"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/aiham/project-template.git"
+    "url": "https://github.com/kristianmandrup/project-template.git"
   },
-  "author": "Aiham Hammami <aiham@aiham.net>",
+  "author": "Kristian Mandrup <kmandrup@gmail.com>",
   "contributors": [
+    "Aiham Hammami <aiham@aiham.net>",
     "Kristian Mandrup <kmandrup@gmail.com>"
   ],
   "license": "MIT",

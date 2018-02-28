@@ -14,19 +14,21 @@ module.exports = function ({
 }) {
   const renderTemplates = (files) => {
     info('render templates')
-    return Promise.all(files.map(({
-      file,
-      isTemplate
-    }) => {
-      const fileParams = Object.assign(opts, params[file])
-      const templateFile = resolveTemplateFile(file, fileParams)
+    return Promise.all(files.map(entry => {
+      const {
+        filePath,
+        params,
+        name,
+        isTemplate
+      } = entry
+      const templateFile = resolveTemplateFile(entry)
 
       function renderIt() {
         info('render', {
           templateFile,
           fileParams
         })
-        return renderTemplate(templateFile, fileParams):
+        return renderTemplate(templateFile, params)
       }
 
       function readIt() {
@@ -34,7 +36,7 @@ module.exports = function ({
         info('read', {
           filePath,
         })
-        return readFile(filePath)
+        return readFile(filePath, 'utf8')
       }
 
       const doTemplate = isTemplate ? renderIt : readIt

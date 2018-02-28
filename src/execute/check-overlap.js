@@ -6,20 +6,22 @@ module.exports = function ({
 }) {
   const checkOverlap = (files) => {
     info('check overlap')
+
     const templateFiles = files.filter(({
-        file,
         isTemplate
-      }) => isTemplate)
+      }) => entry.isTemplate)
       .map(({
-        file
-      }) => file);
+        filePath
+      }) => filePath);
+
     const ordinaryFiles = files.filter(({
-        file,
+        filePath,
         isTemplate
       }) => !isTemplate)
       .map(({
-        file
-      }) => file);
+        filePath
+      }) => filePath);
+
     const invalidFiles = intersection(templateFiles, ordinaryFiles);
     if (invalidFiles.length) {
       error(

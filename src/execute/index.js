@@ -1,9 +1,8 @@
 const create = {
   normalizePaths: require('./normalize-paths'),
-  addIsTemplate: require('./add-is-template'),
+  entryDetails: require('./entry-details'),
   checkOverlap: require('./check-overlap'),
   filterIgnore: require('./filter-ignore'),
-  checkParams: require('./check-params'),
   renderTemplates: require('./render-templates'),
   writeToTarget: require('./write-to-target')
 }
@@ -21,10 +20,9 @@ module.exports = function execute(config = {}) {
 
   return recursiveReadDir(config.templatePath)
     .then(chain.normalizePaths)
-    .then(chain.addIsTemplate)
+    .then(chain.entryDetails)
     .then(chain.checkOverlap)
     .then(chain.filterIgnore)
-    .then(chain.checkParams)
     .then(chain.renderTemplates)
     .then(chain.writeToTarget)
 }

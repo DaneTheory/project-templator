@@ -3,9 +3,7 @@ module.exports = function ({
 }) {
   const filterIgnore = (files) => {
     info('filter template files to ignore')
-    return files.filter(({
-      file
-    }) => !ignore(file))
+    return files.filter(entry => !ignore(entry))
   }
 
   return filterIgnore
