@@ -104,7 +104,7 @@ projectTemplate({
   },
   opts: {
     srcExt: 'ts', // used by resolveTemplateFile
-    rootBuildPath: '/path/to/build' // used by buildPath
+    rootBuildPath: '/path/to/build', // used by buildPath
     testLib: 'ava' // used by ignore
   },
   params: {
