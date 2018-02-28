@@ -161,6 +161,15 @@ projectTemplate({
 
 ### projectTemplate(options) -&gt; Promise&lt;Array&lt;String&gt;&gt;
 
+
+### Custom template engine
+
+You could integrate your own templating engine...
+
+- [Sao custom-template-engine](https://sao.js.org/#/create?id=custom-template-engine)
+- [Kopy](https://github.com/saojs/kopy)
+- [jstransformers](https://github.com/jstransformers/jstransformer#api)
+
 ### options
 
 | Key | Type | Required | Default | Notes |
