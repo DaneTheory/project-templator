@@ -109,7 +109,7 @@ projectTemplate({
 
   // use a custom entry option to set destination file extension for all (.js) files
   populateEntry(entry) {
-    entry.destExt = entry.ext === 'js' ? entry.opts.srcExt : ext
+    entry.destExt = entry.fileExt === 'js' ? entry.opts.srcExt : entry.fileExt
     return entry
   },
   // select template file to use based on srcExt option
@@ -166,12 +166,11 @@ projectTemplate({
 })
 ```
 
-## Things to keep in mind
+## Notice
 
-- Template files are expected to use [ect](https://github.com/baryshev/ect) syntax. You can however pass your own template render function
-- Directory structure of files in `templatePath` is by default maintained in `buildPath` but can be overridden
-- Files in `templatePath` without `fileExtension` as extension (ie usually `.ect`) are just copied over to `buildPath` (ie. `destPath`) as they are
-- You cannot have two files with the same file path where one has `fileExtension` and the other doesn't
+- Directory structure of files in `templatePath` is by default maintained in `buildPath` but can easily be customized by supplying a `destPath` function
+- Files in `templatePath` without matching template extension are just copied over to `destPath` as they are without template rendering or transformation
+- You cannot have two files with the same file path where one is a template and one isn't. The template file will be stripped off its template extension and there will then be a matching `filePath` conflict
 
 ## API
 
@@ -248,22 +247,23 @@ projectTemplate({
 
 | Key | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
-| templatePath | String | Yes | | Directory path containing template files |
+| templatePath | String | Yes | './templates' | Directory path containing template files |
+| templateSrc | Object | No | {} | Src of templates, can be a `remote` pointer or local `filePath` |
 | buildPath | String/Function | Yes | | Directory path to write generated files to (for `destPath`) |
 | params | Object | No | `{}` | Keys are relative paths of template files (with `fileExtension` stripped). Values are objects of template variables |
-| ignoreFiles | Array&lt;String&gt; | No | `[]` | File paths to ignore (exclude the `fileExtension` for template files). Useful for [ect partials](https://github.com/baryshev/ect#partials) |
+| ignoreFiles | String[] | No | `[]` | File paths to ignore (exclude the `fileExtension` for template files). Also useful for using [template partials](https://github.com/baryshev/ect#partials) |
 | fileExtension | String | No | `ect` | File extension of template files |
 |  ignore | Function | No | undefined | Whether to ignore file |
 |  opts | Object | No | {} | Global options |
 | resolve | Function map | No | {} | Map of custom resolver functions (see below) |
+| create | Function map | No | {} | Map of custom factory functions |
 | populateEntry | Function | No | undefined | Custom function to populate entry |
-| extTypeMap | Object | No | {} | Map used by `resolveFileType` to determine type of file |
-| folderTypeMap | Object | No | {} | Map used by `resolveFolderType` to determine type of folder |
+| maps | Object | No | {} | Map of maps used internally (see below) |
 | transformFileData | Function | No | undefined | Custom function to transform data before write to disk |
 | prependWith | Object | No | {} | Map for what to prepend with for different output types |
 | appendWith | Object | No | {} | Map for what to append with for different output types |
-|  warningsOn | Boolean | No | false | enable warnings |
-|  infosOn | Boolean | No | false | enable info messages |
+|  warningOn | Boolean | No | false | enable warnings |
+|  infoOn | Boolean | No | false | enable info messages |
 |  logger | Object | No | console | Custom logger to log error and info messages |
 
 #### entry
@@ -282,28 +282,111 @@ The `entry` that is passed on in each step consists of the following:
 You can use `populateEntry` option to pass a function to further customize the entry being used to suit your specific needs.
 
 ```js
-
-$Path: '/src/helpers/service-finder.ts',
-filePath: 'src/helpers/service-finder.test.ts',
-name: 'service-finder',
-ext: 'ts',
-dirName: 'src/helpers',
-isTemplate: true,
-type: {
-  file: 'test.src',
-  folder: 'helpers',
-  entity: 'service'
-},
-params: {
-  // params resolved for entry
-}
-opts: {
-  // from config.opts
-},
-config: {
-  // ... all the "global" configs passed
+{
+  fullTemplatePath: '/Users/guest/projects/templates/src/helpers/service-finder.ts.ect',
+  templatePath: '/src/helpers/service-finder.ts.ect',
+  filePath: 'src/helpers/service-finder.test.ts',
+  name: 'service-finder',
+  fileName: 'service-finder.ts',
+  fileExt: 'ts',
+  dirName: 'src/helpers',
+  isTemplate: true,
+  type: {
+    file: 'test:src', // create your own convention
+    folder: 'helpers',
+    entity: 'service'
+  },
+  params: {
+    // params resolved for entry
+  }
+  opts: {
+    // from config.opts
+  },
+  config: {
+    // ... all the "global" configs passed
+  }
 }
 ```
+
+### Additional template meta data
+
+Use optional template manifest files (or `json/yaml`)
+
+- `template.manifest.js`
+- `template.entry.js`
+- `template.params.js`
+
+Can be used to provide meta info for each template included, such as entity type etc. that can not be determined from the filename alone.
+
+Can include params map with `type`, `required` and `default` for each.
+
+Before rendering, can populate missing params with `default` values then check if supplied params match requirements.
+
+
+```js
+paramDefinitions: {
+  // the name param can be reused in multiple params lists below
+  string: {
+    type: 'string',
+    default: 'unknown',
+  }
+  name: {
+    default: 'john doe',
+    required: true,
+    validate: 'name',
+    inherit: 'string'
+  },
+  // ...
+}
+```
+
+Add map of params supported, then reference in maps for type: file, entity name or fileName
+
+```js
+entryType: {
+  filePath: {
+    'Readme.md': {
+      type: 'main.readme',
+      params: [
+        'title',
+        'description',
+        ...
+      ],
+    'docs/Readme.md': {
+      type: 'main.docs.readme',
+      // ...
+    }
+  },
+  name: {
+    'package': {
+      type: 'node.package.management',
+      params: [
+        'author', // reference params definitions
+        ...
+      ]
+    ]
+  },
+  entity: {
+    service: [
+      'name',
+      'provider'
+    ],
+  },
+  folder: {
+    test: [
+      'author'
+    ]
+  }
+}
+```
+
+After creating the initial entry, we use it to lookup into this `entryType` map:
+
+- look for matching `folder`, `entity`, `name`, `filePath`  in this sequence.
+
+Deep merge all objects matched into one Object. Use this is `defaults.populateEntry` strategy!
+
+When rendering, validate each param on `params` about to be sent to template!
 
 #### resolve
 
@@ -315,9 +398,9 @@ The `resolve` option can be used to pass one or more custom resolver functions.
 | fileType | Function | No | undefined | Determine file type from entry |
 | folderType | Function | No | undefined | Determine folder type from entry |
 | entityType | Function | No | undefined | Determine entity type from entry |
-| params | Function | No | undefined | Custom function to resolve params for entry |
+| params | Function | No | undefined | Determine params to use for entry |
 | templateRenderer | Function | No | undefined | Create custom template renderer |
-
+| normalizePath | Function | No | undefined | Strip off template extension from filePath |
 #### params
 
 The built-in params resolver will lookup in each of the following entry params containers

@@ -6,38 +6,19 @@ const mkdirpCb = require('mkdirp');
 const writeFile = promisify(fs.writeFile);
 const mkdirp = promisify(mkdirpCb);
 
+const {
+  transformData
+} = require('./transform')
+
 module.exports = function ({
   opts,
   params,
-  buildPath,
-  resolveDestPath,
-  transformFileData,
+  resolve,
   prependWith,
   appendWith,
   info
 }) {
-  const getData = (srcMap, type) => {
-    const src = srcMap[type.file] || srcMap[type.folder] || srcMap[type.entity]
-    return typeof src === 'string' ? src : src(entry)
-  }
-
-  const defaultTransformFileData = (entry) => {
-    const {
-      data,
-      type,
-      info
-    } = entry
-
-    const prependData = getData(prependWith, type)
-    const appendData = getData(appendWith, type)
-
-    let fileData = []
-    prependData && fileData.push(prependData)
-    fileData.push(data)
-    appendData && fileData.push(appendData)
-
-    return fileData.join('\n')
-  }
+  transformFileData = transformFileData || transformData
 
   const writeToTarget = (files) => {
     // each file entry is of the form: {file, isTemplate, data}

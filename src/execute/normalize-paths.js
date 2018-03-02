@@ -14,7 +14,8 @@ module.exports = function ({
       const filePath = file.replace(/^[\/\\]+/, '')
 
       const entry = {
-        $path: file, // full path
+        fullTemplatePath: templatePath,
+        templatePath: file, // original template path
         filePath: filePath
       }
       info('normalized entry', entry)

@@ -1,6 +1,6 @@
 module.exports = function ({
-  warningsOn,
-  infosOn,
+  warningOn,
+  infoOn,
   logger = console
 }) {
   function logErr(msg, data) {
@@ -12,12 +12,12 @@ module.exports = function ({
   }
 
   function info(msg) {
-    if (!infosOn) return
+    if (!infoOn) return
     log(msg, data)
   }
 
   function warning(msg) {
-    if (!warningsOn) return
+    if (!warningOn) return
     logErr(msg, data)
   }
 

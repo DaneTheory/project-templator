@@ -4,7 +4,7 @@ const create = {
   checkOverlap: require('./check-overlap'),
   filterIgnore: require('./filter-ignore'),
   renderTemplates: require('./render-templates'),
-  writeToTarget: require('./write-to-target')
+  writeFile: require('./write-file')
 }
 
 const {
@@ -24,5 +24,5 @@ module.exports = function execute(config = {}) {
     .then(chain.checkOverlap)
     .then(chain.filterIgnore)
     .then(chain.renderTemplates)
-    .then(chain.writeToTarget)
+    .then(chain.writeFile)
 }

@@ -1,10 +1,6 @@
 module.exports = function (config) {
   const {
-    extensionPattern,
-    resolveFileType,
-    resolveFolderType,
-    resolveEntityType,
-    resolveParams,
+    resolve,
     populateEntry,
     info
   } = config
@@ -16,8 +12,8 @@ module.exports = function (config) {
         filePath
       } = entry
       entry.config = config
-      entry.filePath = filePath.replace(extensionPattern, '')
-      entry.ext = path.extname(filePath).slice(1) // such as js for any xyz.js file
+      entry.filePath = resolve.normalizePath(filePath)
+      entry.fileExt = path.extname(entry.filePath).slice(1) // such as js for any xyz.js file
 
       // resolve file type
       entry.type = {
@@ -25,12 +21,14 @@ module.exports = function (config) {
         name: path.basename(filePath),
         dirName: path.dirname(filePath),
         type: {
-          file: resolveFileType(entry),
-          entity: resolveEntityType(entry),
-          folder: resolveFolderType(entry),
+          file: resolve.type.file(entry),
+          entity: resolve.type.entity(entry),
+          folder: resolve.type.folder(entry),
         },
         isTemplate: extensionPattern.test(filePath)
       }
+      entry.fileName = [entry.name, entry.fileExt].join('.')
+
       entry.params = resolveParams(entry)
 
       // add any further entry customizations

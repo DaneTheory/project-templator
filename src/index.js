@@ -7,25 +7,32 @@ const projectTemplates = (tmplMap, options) => {
   })
 }
 
+const maps = {
+  type: {
+    ext: {
+      src: ['js', 'mjs', 'ts', 'tsx', 'jsx'],
+      test: ['test.js', 'spec.js']
+    },
+    folder: {
+      src: ['src', 'lib'],
+      test: ['test', 'tests', '__tests__', 'spec', 'specs']
+    }
+  },
+  renderEngines: {
+    ect: renderEctTemplate
+  },
+  templateExts: ['ect'],
+  params: {},
+}
+
 const projectTemplate = ({
-  fileExtension = 'ect',
-  templatePath,
+  templateSrc,
   resolve = {},
-  createTemplateRenderer,
-  extTypeMap = {
-    src: ['js', 'mjs', 'ts', 'tsx', 'jsx'],
-    test: ['test.js', 'spec.js']
-  },
-  folderTypeMap = {
-    src: ['src', 'lib'],
-    test: ['test', 'tests', '__tests__', 'spec', 'specs']
-  },
-  buildPath,
-  params = {},
+  maps,
+  destPath,
   ignoreFiles = [],
-  ignore,
-  warningsOn,
-  infosOn,
+  warningOn,
+  infoOn,
   transformFileData,
   prependWith = {},
   appendWith = {},
@@ -33,16 +40,14 @@ const projectTemplate = ({
 }) => Promise.resolve().then(() => {
   execute(options(fileExtension,
     templatePath,
+    templateSrc,
     resolve,
-    createTemplateRenderer,
-    extTypeMap,
-    folderTypeMap,
-    buildPath,
+    destPath,
     params,
     ignoreFiles,
     ignore,
-    warningsOn,
-    infosOn,
+    warningOn,
+    infoOn,
     transformFileData,
     prependWith,
     appendWith,
