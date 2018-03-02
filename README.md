@@ -327,13 +327,13 @@ Before rendering, can populate missing params with `default` values then check i
 paramDefinitions: {
   // the name param can be reused in multiple params lists below
   string: {
-    type: 'string',
+    type: String,
+    validate: 'string',
     default: 'unknown',
   }
   name: {
     default: 'john doe',
     required: true,
-    validate: 'name',
     inherit: 'string'
   },
   // ...
@@ -343,7 +343,7 @@ paramDefinitions: {
 Add map of params supported, then reference in maps for type: file, entity name or fileName
 
 ```js
-entryType: {
+entryData: {
   filePath: {
     'Readme.md': {
       type: 'main.readme',
