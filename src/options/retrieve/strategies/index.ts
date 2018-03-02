@@ -28,11 +28,13 @@ export async function retrieveTemplates(parsed: IParseResult, options: any = {})
     dest,
     error,
     update,
-    clone
+    clone,
+    forceNpm
   } = options
 
   const {
-    mustDownload
+    mustDownload,
+    exists
   } = await shouldDownload({
       parsed,
       dest
@@ -40,8 +42,10 @@ export async function retrieveTemplates(parsed: IParseResult, options: any = {})
 
   const opts = {
     mustDownload,
+    exists,
     update,
-    clone
+    clone,
+    forceNpm
   }
 
   return firstValue(strategies, (fn: Function) => fn(parsed, opts)) || error('Could not retrieve templates', {

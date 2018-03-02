@@ -5,10 +5,9 @@ import * as co from 'co'
 import * as EventEmitter from 'events'
 
 const configDir = path.join(home, '.sao')
-const packagesDir = path.join(configDir, 'packages')
-
 
 export const event = new EventEmitter()
+export const packagesDir = path.join(configDir, 'packages')
 export const reposDir = path.join(configDir, 'repos')
 
 export function getPackageTemplatePath(name: string) {

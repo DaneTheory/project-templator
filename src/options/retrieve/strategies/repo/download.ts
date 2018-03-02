@@ -11,7 +11,13 @@ function download(repo: string, dest: string, options: any = {}) {
   })
 }
 
-export function repo(parsed: IParseResult, dest: string, options: any = {}) {
+interface IRepoDef {
+  user: string
+  name: string
+  version?: string
+}
+
+export function repo(parsed: IRepoDef, dest: string, options: any = {}) {
   return fs.remove(dest).then(() => {
     const repo = `${parsed.user}/${parsed.name}${
       parsed.version ? `#${parsed.version}` : ''

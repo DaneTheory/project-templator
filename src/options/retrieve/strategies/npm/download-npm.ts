@@ -1,43 +1,36 @@
 import { IParseResult } from '../../parse'
 import * as yarnInstall from 'yarn-install'
 import * as tildify from 'tildify'
+import {
+  ensurePackages,
+  packagesDir,
+  event,
+  readPkg
+} from '../utils'
 
-export async function downloadFromNpm(parsed: IParseResult, options: any = {}) {
+export async function downloadFromNpm(options: any = {}) {
   const {
     packageName,
-    configUtils,
-    event,
+    version,
+    log,
     dest,
     forceNpm,
-    utils,
-    log,
     exists
   } = options
-  let {
-    configFileName
-  } = options
 
-  await configUtils.ensurePackages()
+  await ensurePackages()
 
   const pm = yarnInstall.getPm({
     respectNpm5: forceNpm
   })
   event.emit('install-template:start', packageName, pm)
-  const version = parsed.version ? `@${parsed.version}` : ''
+  const pkgVersion = version ? `@${version}` : ''
 
-  const proc = yarnInstall([`${packageName}${version}`], {
+  const proc = yarnInstall([`${packageName}${pkgVersion}`], {
     stdio: 'pipe',
-    cwd: configUtils.packagesDir,
+    cwd: packagesDir,
     respectNpm5: forceNpm
   })
-
-  // Now template is downloaded
-  // Read the template pkg and config file name
-  const templatePkg = utils.readPkg(dest)
-  configFileName = configUtils.getConfigFileName(
-    configFileName,
-    templatePkg
-  )
 
   if (proc.status !== 0) {
     const msg =
@@ -51,5 +44,11 @@ export async function downloadFromNpm(parsed: IParseResult, options: any = {}) {
     }
   }
 
+  // Now template is downloaded
+  // Read the template pkg and config file name
+  const templatePkg = readPkg(dest)
+  return {
+    templatePkg
+  }
 }
 

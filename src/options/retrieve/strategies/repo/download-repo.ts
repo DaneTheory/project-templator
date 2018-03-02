@@ -4,7 +4,7 @@ import {
   event
 } from '../utils'
 
-export async function downloadRepo(parsed: any, options: any = {}) {
+export async function downloadRepo(repo: any, options: any = {}) {
   const {
     dest,
     clone
@@ -13,7 +13,7 @@ export async function downloadRepo(parsed: any, options: any = {}) {
 
   event.emit('download:start')
 
-  await download.repo(parsed, dest, {
+  await download.repo(repo, dest, {
     clone
   })
 
