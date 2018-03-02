@@ -1,10 +1,11 @@
-const {
+import {
   VM
-} = require('vm2')
-const _ = require('powerdash')
+} from 'vm2'
+import * as _ from 'powerdash'
 const ctx = {}
+import * as fs from 'fs'
 
-const createVm = (options) => {
+const createVm = (options: any) => {
   const vmOpts = Object.assign({
     timeout: 1000,
     // what to make available inside
@@ -16,26 +17,21 @@ const createVm = (options) => {
   return new VM(vmOpts)
 }
 
-
-function runSandboxedCodeAt(filePath) {
+export function runSandboxedCodeAt(filePath: string, options?: any): any {
   const code = fs.readFileSync(filePath, 'utf8')
   return sandboxed({
-    code
+    code,
+    options
   })
 }
 
-function sandboxed({
-  code,
-  options,
-  vm
-}) {
+export function sandboxed(config: any = {}) {
+  let {
+    code,
+    options,
+    vm
+  } = config
   vm = vm || createVm(options)
   vm.run(code)
   return ctx
-}
-
-
-module.exports = {
-  runSandboxedCodeAt,
-  sandboxed
 }
