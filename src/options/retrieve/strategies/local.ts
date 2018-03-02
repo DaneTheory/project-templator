@@ -8,6 +8,7 @@ export function fromLocal(parsed: any, options?: any) {
   const dest = parsed.path
   const templatePkg = utils.readPkg(dest)
   configFileName = configUtils.getConfigFileName(configFileName, templatePkg)
+
   return {
     dest,
     templatePkg,

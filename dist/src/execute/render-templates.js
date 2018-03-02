@@ -1,16 +1,20 @@
-const fs = require('fs');
-const { promisify } = require('util');
-const readFile = promisify(fs.readFile);
-module.exports = function ({ resolveTemplateFile, resolveTemplateRenderer, templatePath, renderTemplate, params, opts, info }) {
-    const renderTemplates = (files) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
+const path = require("path");
+const util_1 = require("util");
+const readFile = util_1.promisify(fs.readFile);
+function renderTemplates(config = {}) {
+    const { resolveTemplateFile, templatePath, renderTemplate, info } = config;
+    return (files) => {
         info('render templates');
-        return Promise.all(files.map(entry => {
-            const { filePath, params, name, isTemplate } = entry;
+        return Promise.all(files.map((entry) => {
+            const { params, isTemplate } = entry;
             const templateFile = resolveTemplateFile(entry);
             function renderIt() {
                 info('render', {
                     templateFile,
-                    fileParams
+                    params
                 });
                 return renderTemplate(templateFile, params, entry);
             }
@@ -22,15 +26,12 @@ module.exports = function ({ resolveTemplateFile, resolveTemplateRenderer, templ
                 return readFile(filePath, 'utf8');
             }
             const doTemplate = isTemplate ? renderIt : readIt;
-            doTemplate().then(data => {
-                return {
-                    file,
-                    isTemplate,
-                    data
-                };
+            doTemplate().then((data) => {
+                entry.data = data;
+                return entry;
             });
         }));
     };
-    return renderTemplates;
-};
+}
+exports.renderTemplates = renderTemplates;
 //# sourceMappingURL=render-templates.js.map

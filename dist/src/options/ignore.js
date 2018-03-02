@@ -5,7 +5,7 @@ function createIgnore(config) {
     // if ignoreFiles present, use it to create default ignore template function
     if (ignoreFiles) {
         validate.array(ignoreFiles);
-        ignoreFiles.every(file => validate.string(file));
+        ignoreFiles.every((file) => validate.string(file));
         config.fileMatchers = ignoreFiles.map(toRegExp);
         defaults.ignore = defaults.ignoreFileMatcher;
     }

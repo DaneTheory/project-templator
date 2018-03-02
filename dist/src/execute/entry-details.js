@@ -1,8 +1,11 @@
-module.exports = function (config) {
-    const { resolve, populateEntry, info } = config;
-    const entryDetails = (files) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
+function entryDetails(config = {}) {
+    const { resolve, populateEntry, isTemplate, info } = config;
+    return (files) => {
         info('entry details');
-        return files.map(entry => {
+        return files.map((entry) => {
             info('add details', entry);
             const { filePath } = entry;
             entry.config = config;
@@ -18,16 +21,16 @@ module.exports = function (config) {
                     entity: resolve.type.entity(entry),
                     folder: resolve.type.folder(entry),
                 },
-                isTemplate: extensionPattern.test(filePath)
+                isTemplate: isTemplate(entry.templatePath)
             };
             entry.fileName = [entry.name, entry.fileExt].join('.');
-            entry.params = resolveParams(entry);
+            entry.params = resolve.params(entry);
             // add any further entry customizations
             entry = typeof populateEntry === 'function' ? populateEntry(entry) : entry;
             info('entry', entry);
             return entry;
         });
     };
-    return entryDetails;
-};
+}
+exports.entryDetails = entryDetails;
 //# sourceMappingURL=entry-details.js.map

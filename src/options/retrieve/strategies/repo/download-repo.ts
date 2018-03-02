@@ -1,18 +1,21 @@
 import * as download from './download'
+import {
+  ensureRepos,
+  event
+} from '../utils'
 
 export async function downloadRepo(parsed: any, options: any = {}) {
   const {
-    configUtils,
     dest,
     clone
   } = options
-  await configUtils.ensureRepos()
+  await ensureRepos()
 
-  // event.emit('download:start')
+  event.emit('download:start')
 
   await download.repo(parsed, dest, {
     clone
   })
 
-  // event.emit('download:stop')
+  event.emit('download:stop')
 }

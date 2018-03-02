@@ -5,3 +5,4 @@ declare module 'download-git-repo';
 declare module 'yarn-install';
 declare module 'tildify';
 declare module 'powerdash';
+declare module 'co';

@@ -1,22 +1,28 @@
 import * as fs from 'fs-extra'
 import * as semver from 'semver'
+import {
+  readPkg
+} from './utils'
 
 export async function shouldDownload(options: any = {}) {
-  const {
+  let {
     dest,
-    utils,
-    parsed
+    parsed,
+    update
   } = options
 
-  let update = false
   // Check if existing package version matches expected package version
   const exists = await fs.pathExists(dest)
   if (exists && parsed.version) {
-    const templatePkg = utils.readPkg(dest)
+    const templatePkg = readPkg(dest)
     if (!semver.satisfies(templatePkg.version, parsed.version)) {
       update = true
     }
   }
 
-  return update || !exists
+  return {
+    mustDownload: update || !exists,
+    update,
+    exists
+  }
 }

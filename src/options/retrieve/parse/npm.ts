@@ -5,7 +5,7 @@ import {
 } from '.'
 
 // Explict npm name
-export function explicitNpm(template: string): IParseResult | false {
+export function explicitNpm(template: string, options?: any): IParseResult | false {
   if (!template.startsWith('npm:')) return false
   return parse(template.replace(/^npm:/, ''), false)
 }

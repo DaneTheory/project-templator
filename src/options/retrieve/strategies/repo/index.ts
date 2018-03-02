@@ -6,20 +6,24 @@ import {
 import {
   downloadRepo
 } from './download-repo'
+import {
+  reposDir
+} from '../utils'
 
 export function fromRepo(parsed: any, options: any = {}) {
   const {
-    configUtils,
     mustDownload,
+    clone
   } = options
   if (parsed.type !== 'repo') return false
 
   const folderName = filenamify(
     `${parsed.user}%%${parsed.name.replace('/', '-')}`
   )
-  const dest = path.join(configUtils.reposDir, folderName)
+  const dest = path.join(reposDir, folderName)
   const opts = {
-    dest
+    dest,
+    clone
   }
 
   return mustDownload && downloadRepo(parsed, opts) || fromExistingTemplate(parsed, opts)

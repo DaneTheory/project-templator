@@ -3,7 +3,7 @@ import {
 } from 'vm2'
 import * as _ from 'powerdash'
 const ctx = {}
-import * as fs from 'fs'
+import * as fs from 'fs-extra'
 
 const createVm = (options: any) => {
   const vmOpts = Object.assign({
@@ -18,6 +18,15 @@ const createVm = (options: any) => {
 }
 
 export function runSandboxedCodeAt(filePath: string, options?: any): any {
+  const {
+    warn
+  } = options
+  if (!fs.pathExistsSync(filePath)) {
+    warn(`Unable to read file at ${filePath}`)
+    return {
+    }
+  }
+
   const code = fs.readFileSync(filePath, 'utf8')
   return sandboxed({
     code,

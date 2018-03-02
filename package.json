@@ -27,6 +27,8 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "cac": "^4.4.1",
+    "co": "^4.6.0",
     "deepmerge": "^2.0.1",
     "download-git-repo": "^1.0.2",
     "ect": "^0.5.9",
@@ -42,6 +44,7 @@
     "semver": "^5.5.0",
     "stringify-object": "^3.2.2",
     "tildify": "^1.2.0",
+    "user-home": "^2.0.0",
     "vm2": "^3.5.2",
     "yarn-install": "^0.5.1"
   },
@@ -54,6 +57,7 @@
     "@types/node": "^9.4.6",
     "@types/recursive-readdir": "^2.2.0",
     "@types/semver": "^5.5.0",
-    "@types/stringify-object": "^3.2.0"
+    "@types/stringify-object": "^3.2.0",
+    "@types/user-home": "^2.0.0"
   }
 }

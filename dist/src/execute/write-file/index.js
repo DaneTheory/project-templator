@@ -1,34 +1,37 @@
-const { promisify } = require('util');
-const mkdirpCb = require('mkdirp');
-const writeFile = promisify(fs.writeFile);
-const mkdirp = promisify(mkdirpCb);
-const { transformData } = require('./transform');
-module.exports = function ({ opts, params, resolve, prependWith, appendWith, info }) {
-    transformFileData = transformFileData || transformData;
-    const writeToTarget = (files) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const util_1 = require("util");
+const fs = require("fs");
+const path = require("path");
+const mkdirpCb = require("mkdirp");
+const writeFile = util_1.promisify(fs.writeFile);
+const mkdirp = util_1.promisify(mkdirpCb);
+const transform_1 = require("./transform");
+function writeToFile(config = {}) {
+    const { resolve, info } = config;
+    let { transformFileData } = config;
+    transformFileData = transformFileData || transform_1.transformData;
+    return (entries) => {
         // each file entry is of the form: {file, isTemplate, data}
-        files.map(entry => {
-            entry.destPath = resolveDestPath(entry);
-            info('destPath', destPath);
-            return entry;
-        })
-            .then(files => Promise.all(files.map(({ destPath }) => {
-            const dir = path.dirname(destPath);
+        Promise.all(entries.map((entry) => {
+            entry.destPath = resolve.destPath(entry);
+            info('destPath', entry.destPath);
+            const dir = path.dirname(entry.destPath);
             info('ensure dest folder exists', dir);
             mkdirp(dir);
-        })
-            .then(entry => {
+        }))
+            .then((entry) => {
             const { isTemplate, data, destPath } = entry;
             const encoding = isTemplate ? {
                 encoding: 'utf8'
             } : undefined;
             info('template data', data);
-            data = transformFileData ? transformFileData(entry) : data;
-            info('data to write', data);
-            writeFile(destPath, data, encoding);
+            const fileData = transformFileData ? transformFileData(entry) : data;
+            info('data to write', fileData);
+            writeFile(destPath, fileData, encoding);
         })
-            .then(({ destPath }) => destPath)));
+            .then((entry) => entry);
     };
-    return writeToTarget;
-};
+}
+exports.writeToFile = writeToFile;
 //# sourceMappingURL=index.js.map

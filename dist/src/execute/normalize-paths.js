@@ -1,5 +1,8 @@
-module.exports = function ({ templatePath, }) {
-    const normalizePaths = (files) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function normalizePaths(config) {
+    const { templatePath, info } = config;
+    return (files) => {
         info('normalize template file paths');
         return files.map(fullPath => {
             let file = fullPath;
@@ -17,6 +20,6 @@ module.exports = function ({ templatePath, }) {
             return entry;
         });
     };
-    return normalizePaths;
-};
+}
+exports.normalizePaths = normalizePaths;
 //# sourceMappingURL=normalize-paths.js.map
