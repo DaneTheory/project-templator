@@ -35,11 +35,18 @@ export function entryDetails(config: any = {}) {
       } = entry
 
       entry.config = config
-      entry.filePath = resolve.normalizePath(filePath)
-      entry.fileExt = path.extname(entry.filePath).slice(1) // such as js for any xyz.js file
+      entry.filePath = resolve ? resolve.normalizePath(filePath) : filePath
+      if (!entry.filePath) {
+        error('entryDetails: invalid filePath for entry', {
+          entry
+        })
+      }
+
+      const fullExt = path.extname(entry.filePath)
+      entry.fileExt = fullExt.slice(1) // such as js for any xyz.js file
 
       entry.opts = config.opts // for convenience
-      entry.name = path.basename(filePath)
+      entry.name = path.basename(filePath, fullExt)
       entry.dirName = path.dirname(filePath)
 
       entry.isTemplate = validate && validate.function(isTemplate) ? isTemplate(entry.templatePath) : false

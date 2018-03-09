@@ -4,6 +4,7 @@ import {
 
 function createTests(entries: any, config: any) {
   let ctx: any = {}
+  const first: any = {}
   beforeAll(() => {
     ctx.entries = entries
     ctx.entryDetails = create.entryDetails(config)
@@ -17,20 +18,43 @@ function createTests(entries: any, config: any) {
   })
 
   it('adds name to each entry', () => {
-    const firstName = ctx.firstEntry.type
-    expect(firstName).toEqual('x')
+    first.name = ctx.firstEntry.name
+    expect(first.name).toEqual('a')
   })
 
-  it('adds type to each entry', () => {
-    const firstType = ctx.firstEntry.type
-    expect(Object.keys(firstType)).toEqual(['file', 'entity', 'folder'])
+  it('adds opts to each entry', () => {
+    first.opts = ctx.firstEntry.opts
+    expect(first.opts).toEqual(config.opts)
+  })
 
-    expect(firstType).toEqual({
-      file: 'x',
-      entity: 'x',
-      folder: 'x'
+  it('adds dirName to each entry', () => {
+    first.dirName = ctx.firstEntry.dirName
+    expect(first.dirName).toEqual('.')
+  })
+
+  it('adds isTemplate to each entry', () => {
+    first.isTemplate = ctx.firstEntry.isTemplate
+    expect(first.isTemplate).toEqual(false)
+  })
+
+  it('adds fileName to each entry', () => {
+    first.fileName = ctx.firstEntry.fileName
+    expect(first.fileName).toEqual('a.txt')
+  })
+
+  if (config.resolve) {
+
+    it('adds type to each entry', () => {
+      const firstType = ctx.firstEntry.type
+      expect(Object.keys(firstType)).toEqual(['file', 'entity', 'folder'])
+
+      expect(firstType).toEqual({
+        file: undefined,
+        entity: undefined,
+        folder: undefined
+      })
     })
-  })
+  }
 }
 
 
