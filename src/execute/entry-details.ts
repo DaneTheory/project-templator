@@ -5,36 +5,58 @@ export function entryDetails(config: any = {}) {
     resolve,
     populateEntry,
     isTemplate,
-    info
+    info,
+    error,
+    validate
   } = config
-  return (files: string[]) => {
+
+  if (!resolve) {
+    error('entryDetails: missing resolve function as argument', {
+      config
+    })
+  }
+  if (!isTemplate) {
+    error('entryDetails: missing isTemplate function as argument', {
+      config
+    })
+  }
+
+  return (entries: any[]) => {
     info('entry details')
-    return files.map((entry: any) => {
+    return entries.map((entry: any) => {
       info('add details', entry)
+
+      entry = typeof entry === 'string' ? { filePath: entry } : entry
+      validate && validate.object(entry)
+
       const {
+        // templatesPath,
         filePath
       } = entry
+
       entry.config = config
       entry.filePath = resolve.normalizePath(filePath)
       entry.fileExt = path.extname(entry.filePath).slice(1) // such as js for any xyz.js file
 
-      // resolve file type
-      entry.type = {
-        opts: config.opts, // for convenience
-        name: path.basename(filePath),
-        dirName: path.dirname(filePath),
-        type: {
+      entry.opts = config.opts // for convenience
+      entry.name = path.basename(filePath)
+      entry.dirName = path.dirname(filePath)
+
+      entry.isTemplate = validate && validate.function(isTemplate) ? isTemplate(entry.templatePath) : false
+      entry.fileName = [entry.name, entry.fileExt].join('.')
+
+      if (validate && validate.function(resolve)) {
+        // resolve file type
+        entry.type = {
           file: resolve.type.file(entry),
           entity: resolve.type.entity(entry),
           folder: resolve.type.folder(entry),
-        },
-        isTemplate: isTemplate(entry.templatePath)
+        }
+        entry.params = resolve.params(entry)
       }
-      entry.fileName = [entry.name, entry.fileExt].join('.')
-      entry.params = resolve.params(entry)
 
       // add any further entry customizations
-      entry = typeof populateEntry === 'function' ? populateEntry(entry) : entry
+      entry = validate && validate.function(populateEntry) ? populateEntry(entry) : entry
 
       info('entry', entry)
       return entry

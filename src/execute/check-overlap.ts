@@ -1,25 +1,32 @@
-const intersection = require('lodash/intersection');
+import {
+  intersection
+} from 'lodash'
 
-module.exports = function (config: any = {}) {
+export function checkOverlap(config: any = {}) {
   const {
     error,
-    info
+    info,
+    filter
   } = config
-  return (files: string[]) => {
+  return (entries: any[]) => {
     info('check overlap')
 
-    const templateFiles = files.filter((entry: any) => entry.isTemplate)
+    const template = entries.filter((entry: any) => entry.isTemplate)
       .map((entry: any) => entry.filePath)
 
-    const ordinaryFiles = files.filter((entry: any) => !entry.isTemplate)
+    const ordinary = entries.filter((entry: any) => !entry.isTemplate)
       .map((entry: any) => entry.filePath)
 
-    const invalidFiles = intersection(templateFiles, ordinaryFiles);
-    if (invalidFiles.length) {
+    const invalid = intersection(template, ordinary);
+    if (invalid.length) {
+      const filePaths = invalid.map((e: any) => e.filePath).join(', ')
       error(
-        `The following files are invalid as there are also templates with the same filename: ${invalidFiles.join(', ')}`
+        `The following entries are invalid as there are also templates with the same filename: ${filePaths}`
       );
     }
-    return files;
+    if (filter) {
+      entries = filter(entries, { invalid, template, ordinary })
+    }
+    return entries;
   }
 }

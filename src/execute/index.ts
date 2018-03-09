@@ -28,6 +28,10 @@ const create = {
   writeToFile
 }
 
+export {
+  create
+}
+
 import {
   promisify
 } from 'util'

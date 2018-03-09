@@ -1,6 +1,6 @@
 import {
   runSandboxedCodeAt
-} from '../../sandbox'
+} from 'run-sandboxed'
 
 import * as deepmerge from 'deepmerge'
 

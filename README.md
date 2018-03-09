@@ -188,60 +188,7 @@ You could integrate your own templating engine...
 
 ### tree/object transformer
 
-We have included a new type of transformer specifically designed to create nested structures such as `js`, `JSON` or `YAML` objects without the unnatural fit of traditional text based templates.
-
-Here is how it looks in action for generating part of a `package.json` file.
-This is pure JavaScript code, which is executed in a [vm2 sandbox](https://www.npmjs.com/package/vm2).
-[powerdash](https://www.npmjs.com/package/powerdash) functions are made available inside via `_` so you have all the power of [lodash](https://www.npmjs.com/package/lodash), [string.js](https://www.npmjs.com/package/string) and [underscore.string](https://www.npmjs.com/package/underscore.string) with a unified API.
-
-```js
-ctx.treeDef = {
-  opts: {
-    type: 'js',
-    indent: 4
-  },
-  base: {
-    // baseline object
-  },
-  parts: {
-    author({
-      author
-    }) {
-      return _.humanize(author)
-    },
-    repo({
-      username,
-      name
-    }) {
-      return {
-        url: `...github/${_.lowercase(username)}/${name}/...`
-      }
-    }
-  }
-}
-```
-
-Currently we don't yet have it "built in", so to use it see `src/transformers/sandbox.test.js` for an example, then do sth like:
-
-```js
-const {
-  transformTree,
-  sandboxed
-} = require('project-template')
-
-const renderTemplate = (templateFile, params, entry) => {
-  // TODO: use sandboxed with transformTree to transform templateFile
-  // when entry matches certain criteria
-  // for other entry types use suitable template renderers
-}
-
-// then pass renderTemplate as an option
-projectTemplate({
-  // ...
-  renderTemplate,
-  // ...
-})
-```
+See [obj-template]()
 
 ### options
 

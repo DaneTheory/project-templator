@@ -1,6 +1,6 @@
 import {
   runSandboxedCodeAt
-} from '../../sandbox'
+} from 'run-sandboxed'
 
 const deepmerge = require('deepmerge')
 
