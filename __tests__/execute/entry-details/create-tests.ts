@@ -1,8 +1,20 @@
 import {
   create
-} from '..'
+} from '../..'
 
-function createTests(entries: any, config: any) {
+const defaults = {
+  expectations: {
+    type: {
+      file: undefined,
+      entity: undefined,
+      folder: undefined
+    }
+  }
+}
+
+export function createTests(entries: any, config: any, expectations?: any) {
+  expectations = expectations || defaults.expectations
+
   let ctx: any = {}
   const first: any = {}
   beforeAll(() => {
@@ -34,7 +46,7 @@ function createTests(entries: any, config: any) {
 
   it('adds isTemplate to each entry', () => {
     first.isTemplate = ctx.firstEntry.isTemplate
-    expect(first.isTemplate).toEqual(false)
+    expect(first.isTemplate).toEqual(true)
   })
 
   it('adds fileName to each entry', () => {
@@ -43,55 +55,16 @@ function createTests(entries: any, config: any) {
   })
 
   if (config.resolve) {
+    it('adds params to each entry', () => {
+      first.params = ctx.firstEntry.params
+      expect(first.params).toEqual(undefined)
+    })
 
     it('adds type to each entry', () => {
-      const firstType = ctx.firstEntry.type
+      const firstType = ctx.firstEntry.type || {}
       expect(Object.keys(firstType)).toEqual(['file', 'entity', 'folder'])
 
-      expect(firstType).toEqual({
-        file: undefined,
-        entity: undefined,
-        folder: undefined
-      })
+      expect(firstType).toEqual(expectations.type)
     })
   }
 }
-
-
-
-describe('entryDetails', () => {
-  const error = () => { }
-  const info = () => { }
-
-  const config = {
-    error,
-    info
-  }
-
-
-  describe('using simple files list', () => {
-    const files = [
-      'a.txt',
-      'b.txt',
-      'c.txt'
-    ]
-
-    it('', () => {
-      expect(1).toBe(1)
-    })
-
-    createTests(files, config)
-  })
-
-  describe('using entry list', () => {
-    const entries = [{
-      filePath: 'a.txt'
-    }, {
-      filePath: 'b.txt'
-    }, {
-      filePath: 'c.txt'
-    }]
-
-    createTests(entries, config)
-  })
-})

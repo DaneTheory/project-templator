@@ -52,13 +52,20 @@ export function entryDetails(config: any = {}) {
       entry.isTemplate = validate && validate.function(isTemplate) ? isTemplate(entry.templatePath) : false
       entry.fileName = [entry.name, entry.fileExt].join('.')
 
-      if (validate && validate.function(resolve)) {
+      const type = resolve.type
+      if (!(validate && validate.object(type))) {
+        error('Invalid resolve.type', {
+          type: resolve.type
+        })
+      }
+
+      if (validate && validate.object(type)) {
         // resolve file type
-        entry.type = {
-          file: resolve.type.file(entry),
-          entity: resolve.type.entity(entry),
-          folder: resolve.type.folder(entry),
-        }
+        entry.type = ['file', 'entity', 'folder'].reduce((acc, name) => {
+          const resolveType = type[name]
+          acc[name] = validate.function(resolveType) && resolveType(entry)
+          return acc
+        }, {})
         entry.params = resolve.params(entry)
       }
 
