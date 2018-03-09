@@ -19,7 +19,9 @@ describe('entryDetails', () => {
       'c.txt'
     ]
 
-    createTests(files, config)
+    createTests(files, config, {
+      isTemplate: false
+    })
   })
 
   describe('using entry list', () => {
@@ -32,6 +34,16 @@ describe('entryDetails', () => {
     }]
 
     createTests(entries, config)
+
+    describe('with isTemplate defined', () => {
+      const isTemplate = true
+
+      config.isTemplate = () => isTemplate
+
+      createTests(entries, config, {
+        isTemplate
+      })
+    })
 
     describe('with resolve and isTemplate defined', () => {
 

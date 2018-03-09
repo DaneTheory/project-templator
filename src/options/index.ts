@@ -1,3 +1,5 @@
+import * as deepmerge from 'deepmerge'
+
 import {
   resolveLocations
 } from './locations'
@@ -20,19 +22,20 @@ import {
 } from './validate'
 
 import {
-  createErrorHandlers
-} from './error-handlers'
+  createNotifiers
+} from './notifiers'
 
 export function createOptions(config: any) {
   let {
-    templatePath,
+    // templatePath,
     templateSrc,
     destPath,
     resolve,
     create,
     params,
     ignore,
-    ignoreFiles,
+    // ignoreFiles,
+    maps,
     opts,
     transformFileData,
     prependWith,
@@ -40,10 +43,10 @@ export function createOptions(config: any) {
   } = config
 
   const {
-    warning,
+    warn,
     error,
     info
-  } = createErrorHandlers(config)
+  } = createNotifiers(config)
   const validate = createValidate({
     error
   })
@@ -55,10 +58,6 @@ export function createOptions(config: any) {
   const applyDefaults = createApplyDefaults(config)
 
   ignore = createIgnore(config)
-  {
-    templateSrc,
-      destPath
-  } =
 
   resolve = applyDefaults(resolve)
   maps = createMaps(maps, {
@@ -78,7 +77,7 @@ export function createOptions(config: any) {
     ignore,
     params,
     opts,
-    warning,
+    warn,
     error,
     info,
     transformFileData,

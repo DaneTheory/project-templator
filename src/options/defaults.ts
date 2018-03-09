@@ -10,11 +10,11 @@ import {
 } from './templates'
 import {
   createMaps,
-  maps
+  mapDefaults
 } from './maps'
 
 import {
-  populateEntry
+  createPopulateEntry
 } from './populate'
 
 const create = {
@@ -29,7 +29,7 @@ const create = {
 const createDefaults = (config: any) => {
   return {
     create,
-    maps,
+    maps: mapDefaults,
     type: createTypeMatchers(config),
     params: createResolveParams(config),
     normalizePath(filePath: string) {
@@ -65,24 +65,24 @@ const createDefaults = (config: any) => {
         })
       }
     },
-    populateEntry,
+    populateEntry: createPopulateEntry(config)
   }
 }
 
-function createApplyDefaults(config) {
-  const {
-    resolve,
+function createApplyDefaults(config: any) {
+  let {
     create,
-    defaults
+    defaults,
+    validate
   } = config
   create = create || {}
   defaults = defaults || {}
   const validFun = validate['function']
-  return function (resolve, defaults = {}) {
+  return function (resolve: any, defaults = {}) {
     const defaultFns = Object.keys(defaults)
     return defaultFns.reduce((acc, key) => {
-      createFun = create[key]
-      defFun = validFun(createFun) ? createFun(config) : defaults[key]
+      const createFun: Function = create[key]
+      const defFun = validFun(createFun) ? createFun(config) : defaults[key]
       // validate that each resolve entry is a function, if not use from defaults map
       acc[key] = validFun(acc[key]) || defFun
       return acc
@@ -90,7 +90,7 @@ function createApplyDefaults(config) {
   }
 }
 
-module.exports = {
+export {
   createDefaults,
   createApplyDefaults
 }

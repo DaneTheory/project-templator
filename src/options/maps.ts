@@ -3,7 +3,7 @@ import {
   toRegExp
 } from './util'
 
-export const maps: any = {
+export const mapDefaults = {
   type: {
     ext: {
       src: ['js', 'mjs', 'ts', 'tsx', 'jsx'],
@@ -19,23 +19,43 @@ export const maps: any = {
 }
 
 export function createMaps(maps: any, options: any = {}) {
-  const {
+  let {
     config,
     create,
+    validate,
     defaults,
-    validate
+    info,
+    error
   } = options
+  info('createMaps', {
+    maps,
+    options
+  })
+
+  if (!validate) {
+    error('createMaps: Missing validate function', {
+      options
+    })
+  }
+
   // validate maps entry and all entries within are type: Object
   validate.object(maps)
-  maps.entries((kv: any[]) => validate.object(kv[1]))
+  const mapKeys = Object.keys(maps)
+  mapKeys.map((key: string) => validate.object(maps[key]))
+
+  info('createMaps: set templateEngines')
 
   // create map of template engines to be made available
-  defaults.templateEngines = create.templateEngines(config) || defaults.templateEngines
+  defaults.templateEngines = create && create.templateEngines(config) || defaults.templateEngines
   maps.templateEngines = Object.assign(defaults.templateEngines, maps.templateEngines || {})
+
+  info('createMaps: set type.folder')
 
   // create matchers to determine type of folder
   // any string such as 'test' is converted to a RegExp of the form /\/test\// ie to match on /test/
-  maps.type.folder = Object.keys(maps.type.folder).map(type => {
+  const mappedFolders = Object.keys(maps.type.folder || [])
+
+  maps.type.folder = mappedFolders.map(type => {
     const matchers = maps.type.folder[type]
     return matchers.map((m: string | RegExp) => {
 

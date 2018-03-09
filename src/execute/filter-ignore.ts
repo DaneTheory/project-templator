@@ -4,8 +4,11 @@ export function filterIgnore(config: any = {}) {
     ignore
   } = config
 
-  return (files: string[]) => {
-    info('filter template files to ignore')
-    return files.filter(entry => !ignore(entry))
+  return (entries: any[]) => {
+    info && info('filter template entries to ignore')
+    return entries.filter(entry => {
+      // by default keeps all
+      return ignore ? !ignore(entry) : true
+    })
   }
 }

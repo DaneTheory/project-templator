@@ -8,7 +8,8 @@ const defaults = {
       file: undefined,
       entity: undefined,
       folder: undefined
-    }
+    },
+    isTemplate: false
   }
 }
 
@@ -46,7 +47,7 @@ export function createTests(entries: any, config: any, expectations?: any) {
 
   it('adds isTemplate to each entry', () => {
     first.isTemplate = ctx.firstEntry.isTemplate
-    expect(first.isTemplate).toEqual(true)
+    expect(first.isTemplate).toEqual(expectations.isTemplate)
   })
 
   it('adds fileName to each entry', () => {
