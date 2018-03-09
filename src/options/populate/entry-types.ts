@@ -11,23 +11,38 @@ const $defaults = {
 export function resolveEntryData(entry: any, entryDataSrc: any = {}, options: any = {}) {
   let {
     entryTypes,
-    defaults
+    defaults,
+    info
   } = options
   defaults = defaults || $defaults
   entryTypes = entryTypes || defaults.entryTypes
+  info && info('resolveEntryData', {
+    entryTypes,
+    entryDataSrc
+  })
 
-  return entryTypes.reduce((entryData: any, key: string) => {
+  function resolveEntryAt(entryData: any, key: string) {
     const data = entryDataSrc[key] || {}
     const entryKey = entry[key] || entry.type[key]
     const keyData = data[entryKey] || {}
+    info && info('resolveEntryAt', {
+      key,
+      data,
+      entryKey,
+      keyData
+    })
     return deepmerge(entryData, keyData)
-  }, {})
+  }
+
+  return entryTypes.reduce(resolveEntryAt, {})
 }
 
-export function resolveEntryDataAt(entry: any, options: any) {
-  const {
-    entryFilePath
-  } = options
-  const ctx = runSandboxedCodeAt(entryFilePath, options)
-  return resolveEntryData(entry, ctx.entryData, options)
+export function resolveEntryDataAt(filePath: string, entry: any, options: any) {
+  const ctx = runSandboxedCodeAt(filePath, options)
+  const { entryData } = ctx
+  const params = resolveEntryData(entry, entryData.type, options)
+  return {
+    params,
+    uses: entryData.uses
+  }
 }

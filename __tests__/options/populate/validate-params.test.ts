@@ -6,9 +6,9 @@ import {
 
 describe('validate entry params', () => {
   const info = (msg: string, data: any) => console.log(msg, data)
-  // const options = {
-  //   info
-  // }
+  const options = {
+    info
+  }
 
   const paramDefs = {
     string: {
@@ -35,13 +35,13 @@ describe('validate entry params', () => {
 
   describe('validateParams', () => {
     it('resolves params defs from valid definition object', () => {
+      const options = {}
 
       const result = validateParams({
         params,
         paramDefs,
         uses,
-        info
-      })
+      }, options)
       expect(result).toEqual({
         name: 'kristian', // required
         age: 32 // default

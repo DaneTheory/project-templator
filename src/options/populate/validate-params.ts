@@ -1,14 +1,32 @@
-export function validateParams(options: any = {}) {
+export function validateParams(config: any, options: any = {}) {
   let {
     params,
-    uses,
-    paramDefs,
+    uses, // the params used by the template, ie. template.uses
+    paramDefs
+  } = config
+  const {
     error,
     info,
     validate
   } = options
 
-  uses = uses || []
+  info && info('validateParams', {
+    params,
+    uses,
+    paramDefs
+  })
+
+  const objs = {
+    params,
+    paramDefs
+  }
+
+  Object.keys(objs).map(name => {
+    const val = objs[name]
+    validate && validate.object(val, name)
+  })
+
+  uses = uses || Object.keys(params || {})
 
   function notSet(value: any) {
     return value === undefined || value === null
@@ -16,15 +34,18 @@ export function validateParams(options: any = {}) {
 
   const usedParams = Object.keys(params).filter((param: string) => uses.includes(param))
 
-  info && info('validateParams: ', {
-    params,
-    usedParams,
-    paramDefs
+  info && info('validateParams', {
+    usedParams
   })
   return usedParams.reduce((acc: any, name: string) => {
-    info(`validate and set param: ${name}`)
     const def = paramDefs[name]
     let param = params[name]
+
+    info(`validate and set param: ${name}`, {
+      def,
+      param,
+      params
+    })
 
     if (notSet(param) && def.required) {
       error(`Required parameter ${name} not set`)
@@ -44,6 +65,10 @@ export function validateParams(options: any = {}) {
     }
     // set default value if not set
     if (notSet(param)) {
+      info(`use default value ${def.default}`, {
+        name,
+        param
+      })
       param = def.default
     }
     info(`param ${name} = ${param}`)

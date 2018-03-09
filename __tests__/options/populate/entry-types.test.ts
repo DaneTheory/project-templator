@@ -53,23 +53,23 @@ describe('entry types', () => {
   })
 
   describe('resolveEntryDataAt', () => {
-    const entryFilePath = path.join(__dirname, 'fixtures', 'data.template.tjs')
+    const templatesPath = path.join(__dirname, 'fixtures', 'templates')
+    const filePath = path.join(templatesPath, 'template.data.js')
 
-    const opts = {
-      entryFilePath
-    }
+    const opts = {}
 
     it('resolves data from data src for matching entry keys', () => {
-      const data = resolveEntryDataAt(entry.matching, opts)
-      expect(data).toEqual({
-        x: 42,
+      const { params } = resolveEntryDataAt(filePath, entry.matching, opts)
+      expect(params).toEqual({
+        age: 27,
+        name: 'kristian',
         type: 'web'
       })
     })
 
     it('resolves to empty data when no matching entry keys', () => {
-      const data = resolveEntryDataAt(entry.noMatch, opts)
-      expect(data).toEqual({})
+      const { params } = resolveEntryDataAt(filePath, entry.noMatch, opts)
+      expect(params).toEqual({})
     })
   })
 })

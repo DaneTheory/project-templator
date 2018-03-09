@@ -11,21 +11,36 @@ import {
 
 export function createPopulateEntry(config: any) {
   const {
-    templatesPath
+    templatesPath,
   } = config
-  return function populateEntry(entry: any) {
+  return function populateEntry(entry: any, options: any = {}) {
+    const {
+      info
+    } = options
+
+    info && info('populateEntry', {
+      templatesPath,
+      entry,
+      options
+    })
     const paramDefsPath = path.join(templatesPath, 'template.params.js')
-    const paramDefs = resolveParamDefsAt(paramDefsPath)
+    const paramDefs = resolveParamDefsAt(paramDefsPath, options)
 
-    const entryData = resolveEntryDataAt(entry, {
-      filePath: path.join(templatesPath, 'template.data.js')
+    const filePath = path.join(templatesPath, 'template.data.js')
+    const { params, uses } = resolveEntryDataAt(filePath, entry, options)
+
+    info && info('populateEntry', {
+      entry,
+      params,
+      uses,
+      paramDefs,
+      options
     })
 
-    validateParams({
-      params: entry.params,
-      uses: entryData.params,
+    return validateParams({
+      params,
+      uses,
       paramDefs
-    })
-    return entry
+    }, options)
   }
 }

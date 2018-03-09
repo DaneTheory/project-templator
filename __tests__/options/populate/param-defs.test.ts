@@ -48,7 +48,8 @@ describe('param definitions', () => {
   })
 
   describe('resolveParamDefsAt', () => {
-    const paramsFilePath = path.join(__dirname, 'fixtures', 'params.template.tjs')
+    const templatesPath = path.join(__dirname, 'fixtures', 'templates')
+    const paramsFilePath = path.join(templatesPath, 'template.params.js')
 
     it('resolves data from data src for matching entry keys', () => {
       const data = resolveParamDefsAt(paramsFilePath, options)
