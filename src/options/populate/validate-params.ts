@@ -1,18 +1,28 @@
 export function validateParams(options: any = {}) {
-  const {
+  let {
     params,
     uses,
     paramDefs,
     error,
+    info,
     validate
   } = options
+
+  uses = uses || []
 
   function notSet(value: any) {
     return value === undefined || value === null
   }
 
   const usedParams = Object.keys(params).filter((param: string) => uses.includes(param))
+
+  info && info('validateParams: ', {
+    params,
+    usedParams,
+    paramDefs
+  })
   return usedParams.reduce((acc: any, name: string) => {
+    info(`validate and set param: ${name}`)
     const def = paramDefs[name]
     let param = params[name]
 
@@ -36,6 +46,8 @@ export function validateParams(options: any = {}) {
     if (notSet(param)) {
       param = def.default
     }
+    info(`param ${name} = ${param}`)
+
     acc[name] = param
     return acc
   }, {})

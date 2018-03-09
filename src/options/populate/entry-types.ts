@@ -4,21 +4,30 @@ import {
 
 const deepmerge = require('deepmerge')
 
-function resolveEntryData(entry: any, entryDataSrc: any = {}) {
-  const entries = ['folder', 'entity', 'name', 'filePath']
+const $defaults = {
+  entryTypes: ['folder', 'entity', 'name', 'filePath']
+}
 
-  return entries.reduce((entryData, key) => {
+export function resolveEntryData(entry: any, entryDataSrc: any = {}, options: any = {}) {
+  let {
+    entryTypes,
+    defaults
+  } = options
+  defaults = defaults || $defaults
+  entryTypes = entryTypes || defaults.entryTypes
+
+  return entryTypes.reduce((entryData: any, key: string) => {
     const data = entryDataSrc[key] || {}
-    const entryKey = entry[key]
-    const keyData = data[entryKey]
+    const entryKey = entry[key] || entry.type[key]
+    const keyData = data[entryKey] || {}
     return deepmerge(entryData, keyData)
-  }, entryDataSrc)
+  }, {})
 }
 
 export function resolveEntryDataAt(entry: any, options: any) {
   const {
     entryFilePath
   } = options
-  const ctx = runSandboxedCodeAt(entryFilePath)
-  return resolveEntryData(entry, ctx.entryData)
+  const ctx = runSandboxedCodeAt(entryFilePath, options)
+  return resolveEntryData(entry, ctx.entryData, options)
 }

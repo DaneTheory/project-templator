@@ -1,0 +1,12 @@
+ctx.entryData = {
+  folder: {
+    source: {
+      x: 42
+    }
+  },
+  entity: {
+    service: {
+      type: 'web'
+    }
+  }
+}
