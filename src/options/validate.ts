@@ -3,7 +3,7 @@ import {
 } from './type-checker'
 import * as deepmerge from 'deepmerge'
 
-function createValidatorFn(type: string, config: any) {
+export function createValidatorFn(type: string, config: any) {
   const {
     error,
     typeChecker
@@ -17,7 +17,8 @@ function createValidatorFn(type: string, config: any) {
       }
     }
     const errData = deepmerge(defaultErr, options)
-    return !value || typeChecker[type](value) ? value : error(errData)
+    const typeCheckerFn = typeChecker[type]
+    return !value || typeCheckerFn(value) ? value : error(errData)
   }
 }
 

@@ -5,7 +5,13 @@ import {
 
 describe('maps', () => {
   const defaults = {
-
+    templateEngines(config: any) {
+      return {
+        ect() {
+          return 'hello'
+        }
+      }
+    }
   }
 
   const info = (msg: string, data: any) => console.log(msg, data)
@@ -33,13 +39,12 @@ describe('maps', () => {
 
     it('creates map of templateEngines', () => {
       const keys = Object.keys(maps.templateEngines)
-      expect(keys).toEqual(['renderEctTemplate'])
+      expect(keys).toEqual(['ect'])
+      expect(typeof maps.templateEngines.ect).toEqual('function')
     })
 
     it('creates map for each type', () => {
-      expect(maps.type.folder).toEqual({
-        x: true
-      })
+      expect(maps.type.folder).toEqual(["/src/", "/lib/", "/test/", "/tests/", "/__tests__/", "/spec/", "/specs/"])
     })
   })
 })

@@ -41,6 +41,7 @@
     "deepmerge": "^2.0.1",
     "ect": "^0.5.9",
     "escape-string-regexp": "^1.0.5",
+    "find-derived": "^0.1.0",
     "fs-extra": "^5.0.0",
     "lodash": "^4.17.5",
     "mkdirp": "^0.5.1",
