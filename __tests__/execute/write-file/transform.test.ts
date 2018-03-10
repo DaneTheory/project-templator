@@ -4,11 +4,27 @@ import {
 
 describe('transform', () => {
   const entry = {
-
   }
 
   describe('transformData', () => {
-    const result = transformData(entry)
-    expect(result).toEqual(entry)
+    it('is the identity function by default', () => {
+      const result = transformData(entry)
+      expect(result).toEqual(entry)
+    })
+  })
+
+  describe('prependWith', () => {
+    it('prepends text before template result', () => {
+      const result = transformData(entry)
+      expect(result).toEqual(entry)
+    })
+  })
+
+
+  describe('appendWith', () => {
+    it('prepends text before template result', () => {
+      const result = transformData(entry)
+      expect(result).toEqual(entry)
+    })
   })
 })

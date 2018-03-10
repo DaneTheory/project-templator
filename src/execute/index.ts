@@ -13,8 +13,8 @@ import {
   filterIgnore
 } from './filter-ignore'
 import {
-  renderTemplates
-} from './render-templates'
+  templateRenderer
+} from './render'
 import {
   writeToFile
 } from './write-file'
@@ -24,7 +24,7 @@ const create = {
   entryDetails,
   checkOverlap,
   filterIgnore,
-  renderTemplates,
+  templateRenderer,
   writeToFile
 }
 
