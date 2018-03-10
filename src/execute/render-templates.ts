@@ -6,16 +6,16 @@ import {
 
 const readFile = promisify(fs.readFile);
 
-export function renderTemplates(config: any = {}) {
+export function createTemplateRenderer(config: any = {}) {
   const {
     resolveTemplateFile,
     templatePath,
     renderTemplate,
     info
   } = config
-  return (files: string[]) => {
+  return (entries: any[]) => {
     info('render templates')
-    return Promise.all(files.map((entry: any) => {
+    return Promise.all(entries.map((entry: any) => {
       const {
         params,
         isTemplate
