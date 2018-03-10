@@ -27,6 +27,10 @@ const create = {
 }
 
 const createDefaults = (config: any) => {
+  const ect = createEctTemplateRenderer({
+    templatePath: config.templatePath || config.templateSrc.templatePath
+  })
+
   return {
     create,
     maps: mapDefaults,
@@ -60,9 +64,7 @@ const createDefaults = (config: any) => {
     },
     templateEngines() {
       return {
-        renderEctTemplate: createEctTemplateRenderer({
-          templatePath: config.templatePath || config.templateSrc.templatePath
-        })
+        ect
       }
     },
     populateEntry: createPopulateEntry(config)

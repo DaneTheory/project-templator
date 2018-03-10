@@ -6,11 +6,25 @@ import * as ect from 'ect'
 
 export function createEctTemplateRenderer(config: any = {}) {
   const {
-    templatePath
+    templatePath,
+    defaults
   } = config
-  const templateRenderer = ect({
-    root: templatePath,
-    ext: '.ect',
+
+  const $ectConfig = ((defaults || {}).templates || {}).ect || {}
+  const ext = ($ectConfig || {}).ext || '.ect'
+
+  const ectConfig: any = Object.assign($ectConfig, {
+    ext
   })
-  return promisify(templateRenderer.bind(templateRenderer))
+
+  if (templatePath) {
+    ectConfig.root = templatePath
+  }
+
+  const templateRenderer = ect(ectConfig)
+
+  return {
+    render: promisify(templateRenderer.render.bind(templateRenderer)),
+    config: ectConfig
+  }
 }
