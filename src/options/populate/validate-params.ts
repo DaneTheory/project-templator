@@ -41,7 +41,7 @@ export function validateParams(config: any, options: any = {}) {
     const def = paramDefs[name]
     let param = params[name]
 
-    info(`validate and set param: ${name}`, {
+    info && info(`validate and set param: ${name}`, {
       def,
       param,
       params
@@ -65,13 +65,13 @@ export function validateParams(config: any, options: any = {}) {
     }
     // set default value if not set
     if (notSet(param)) {
-      info(`use default value ${def.default}`, {
+      info && info(`use default value ${def.default}`, {
         name,
         param
       })
       param = def.default
     }
-    info(`param ${name} = ${param}`)
+    info && info(`param ${name} = ${param}`)
 
     acc[name] = param
     return acc
