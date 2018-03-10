@@ -136,13 +136,13 @@ projectTemplate({
     filePath: {
       'src/index.js': {
       }
-    }
+    },
     name: {
       index: {
         firstParam: 'First param value',
         secondParam: 'Second param value',
       },
-    }
+    },
     type: {
       folder: {
         test: {

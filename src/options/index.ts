@@ -27,30 +27,34 @@ import {
 
 export function createOptions(config: any) {
   let {
-    // templatePath,
     templateSrc,
     destPath,
     resolve,
     create,
     params,
     ignore,
-    // ignoreFiles,
     maps,
     opts,
     transformFileData,
     prependWith,
-    appendWith
+    appendWith,
   } = config
 
-  const {
-    warn,
-    error,
-    info
-  } = createNotifiers(config)
+  const notifiers = createNotifiers(config)
+  const { info, error } = notifiers
+  info('createOptions', {
+    notifiers
+  })
+
   const validate = createValidate({
     error
   })
   const defaults = createDefaults(config)
+
+  info('createOptions', {
+    defaults,
+    validate
+  })
 
   // put defaults on configs so we can reuse/extend in custom create/resolve functions
   config.defaults = defaults
@@ -59,27 +63,53 @@ export function createOptions(config: any) {
 
   ignore = createIgnore(config)
 
+  info('createOptions', {
+    ignore
+  })
+
   resolve = applyDefaults(resolve)
+
+  info('createOptions', {
+    resolve
+  })
+
+  // TODO: use applyDefaults?
   maps = createMaps(maps, {
     config,
+    info,
+    error,
     create,
     defaults,
     validate
   })
 
+  info('createOptions', {
+    maps
+  })
+
+  // TODO: use applyDefaults?
+  const locations = resolveLocations({
+    destPath,
+    templateSrc,
+    validate,
+    defaults,
+    info,
+    error
+  })
+
+  info('createOptions', {
+    locations
+  })
+
+
   // create functions to resolve file and folder type
   resolve.type = deepmerge(defaults.type, resolve.type || {})
   return {
-    ...resolveLocations({
-      destPath,
-      templateSrc
-    }),
+    ...locations,
+    ...notifiers,
     ignore,
     params,
     opts,
-    warn,
-    error,
-    info,
     transformFileData,
     prependWith,
     appendWith

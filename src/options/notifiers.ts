@@ -2,15 +2,17 @@ export function createNotifiers(options: any) {
   const {
     warnOn,
     infoOn,
+    errorOn = true,
     logger = console
   } = options
 
   function logErr(msg: string, data?: any) {
-    data ? logger.error(msg) : logger.error(msg, data)
+    if (!errorOn) return
+    data ? logger.error(msg, data) : logger.error(msg)
   }
 
   function log(msg: string, data?: any) {
-    data ? logger.log(msg) : logger.log(msg, data)
+    data ? logger.log(msg, data) : logger.log(msg)
   }
 
   function info(msg: string, data?: any) {

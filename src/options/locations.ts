@@ -1,18 +1,38 @@
 import * as path from 'path'
 
 export function resolveLocations(config: any = {}) {
-  const {
+  let {
     templateSrc,
     destPath,
-    validate
+    validate,
+    defaults,
+    info,
+    error
   } = config
   // set templateSrc.filePath
-  templateSrc.filePath = templateSrc.filePath || path.join(process.cwd(), 'templates')
+  info('resolveLocations', config)
+
+  defaults = defaults || {}
+  templateSrc = templateSrc || {}
+
+  if (!validate.string(destPath)) {
+    error('resolveLocations: missing destPath', {
+      config
+    })
+  }
+
+  let defaultPath = path.join(process.cwd(), 'templates')
+
+  defaultPath = defaults.templatesFilePath ? defaults.templatesFilePath(config) : defaultPath
+
+  templateSrc.filePath = templateSrc.filePath || defaultPath
 
   // validate that templateSrc.filePath is a string
-  validate.nonEmpty.string(templateSrc.filePath)
-  // validate that destPath is a string
-  validate.nonEmpty.string(destPath)
+  if (validate && validate.nonEmpty) {
+    validate.nonEmpty.string(templateSrc.filePath)
+    // validate that destPath is a string
+    validate.nonEmpty.string(destPath)
+  }
 
   return {
     templateSrc,

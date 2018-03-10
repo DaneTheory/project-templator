@@ -16,7 +16,7 @@ export function createValidatorFn(type: string, config: any) {
         type
       }
     }
-    const errData = deepmerge(defaultErr, options)
+    const errData = deepmerge(defaultErr, options || {})
     const typeCheckerFn = typeChecker[type]
     return !value || typeCheckerFn(value) ? value : error(errData)
   }

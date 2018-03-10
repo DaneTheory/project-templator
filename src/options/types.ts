@@ -1,8 +1,9 @@
 export function createTypeMatchers(config: any) {
-  const {
+  let {
     maps,
     opts
   } = config
+  opts = opts || {}
   const unknown = opts.unknown || 'unknown'
   return {
     folder(entry: any) {

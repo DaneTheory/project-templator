@@ -1,17 +1,22 @@
 import * as deepmerge from 'deepmerge'
 
+function resolveNested(object: any, key: string, categoryKey?: string) {
+  const value = categoryKey ? object[categoryKey] : object[key]
+  return value || {}
+}
+
 function $resolveParams(keys: string[], options: any) {
   const {
     entry,
-    nestedKey,
+    category,
     params
   } = options
   return keys.reduce((acc, key) => {
-    const config = (nestedKey ? params[nestedKey][key] : params[key]) || {}
-    const entryKey = (nestedKey ? entry[nestedKey][key] : entry[key])
-    const lookup = config[entryKey]
-    const entryParams = (typeof lookup === 'function' ? lookup(entry) : lookup) || {}
-    return deepmerge(acc, entryParams)
+    const config = resolveNested(params, category, key)
+    const entryKey = resolveNested(entry, category, key)
+    const lookup = config[entryKey] || {}
+    const entryParams = typeof lookup === 'function' ? lookup(entry) : lookup
+    return deepmerge(acc, entryParams || {})
   }, {})
 }
 
@@ -28,7 +33,7 @@ export function createResolveParams(config: any) {
 
     const $typeParams = $resolveParams(['file', 'entity', 'folder'], {
       entry,
-      nestedKey: 'type',
+      category: 'type',
       params
     })
 

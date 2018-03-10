@@ -26,12 +26,22 @@ const create = {
   }
 }
 
+function identity(value: any) {
+  return value
+}
+
 const createDefaults = (config: any) => {
   const ect = createEctTemplateRenderer({
-    templatePath: config.templatePath || config.templateSrc.templatePath
+    templatePath: config.templatePath || (config.templateSrc || {}).templatePath
   })
 
   return {
+    templatesFilePath(config: any) {
+      return path.join(process.cwd(), 'templates')
+    },
+    appendWith: identity,
+    prependWith: identity,
+    transformFileData: identity,
     create,
     maps: mapDefaults,
     type: createTypeMatchers(config),
@@ -64,31 +74,46 @@ const createDefaults = (config: any) => {
     },
     templateEngines() {
       return {
-        ect
+        ect: ect.render
       }
     },
     populateEntry: createPopulateEntry(config)
   }
 }
 
+function noop() {
+  return false
+}
+
 function createApplyDefaults(config: any) {
   let {
     create,
     defaults,
-    validate
+    validate,
+    // info,
+    // error
   } = config
+
+  validate = validate || {}
   create = create || {}
-  defaults = defaults || {}
-  const validFun = validate['function']
-  return function (resolve: any, defaults = {}) {
+  const $defaults = defaults || {}
+  const validFun = validate['function'] || noop
+
+  return function (resolve: any, defaults = $defaults || {}) {
     const defaultFns = Object.keys(defaults)
-    return defaultFns.reduce((acc, key) => {
+
+    function resolveDefaultFn(acc: any, key: string) {
       const createFun: Function = create[key]
       const defFun = validFun(createFun) ? createFun(config) : defaults[key]
+      const resolveFun = acc[key]
+      const value = validFun(resolveFun) || defFun
       // validate that each resolve entry is a function, if not use from defaults map
-      acc[key] = validFun(acc[key]) || defFun
+      acc[key] = value
       return acc
-    }, resolve || {})
+    }
+
+    const reduced = defaultFns.reduce(resolveDefaultFn, resolve || {})
+    return reduced
   }
 }
 

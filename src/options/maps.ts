@@ -67,9 +67,10 @@ export function resolveTemplateEngines(maps: any, options: any) {
 }
 
 export function mapMatchers(maps: any) {
-  const mappedFolders = Object.keys(maps.type.folder || [])
+  const folder = (maps.type || {}).folder
+  const mappedFolders = Object.keys(folder || [])
   const regExpFolders = mappedFolders.map((type: string) => {
-    const matchers = maps.type.folder[type]
+    const matchers = folder[type]
     return matchers.map((m: string | RegExp) => {
 
       return typeof m === 'string' ? addMissing(m, {
@@ -90,10 +91,17 @@ export function createMaps(maps: any, options: any = {}) {
     info,
     error
   } = options
+  maps = maps || {}
   info && info('createMaps', {
     maps,
     options
   })
+
+  if (!maps) {
+    error && error('createMaps: Missing maps', {
+      maps
+    })
+  }
 
   if (!validate) {
     error && error('createMaps: Missing validate function', {
@@ -102,16 +110,26 @@ export function createMaps(maps: any, options: any = {}) {
   }
   validateMaps(maps, validate)
 
-  info && info('createMaps: set templateEngines')
+  info && info('createMaps: resolve templateEngines')
 
   // create map of template engines to be made available
-  maps.templateEngines = resolveTemplateEngines(maps, { create, defaults, config, info, error })
+  const templateEngines = resolveTemplateEngines(maps, { create, defaults, config, info, error })
+
+  info && info('createMaps: templateEngines', {
+    templateEngines
+  })
+  maps.templateEngines = templateEngines
 
   info('createMaps: set type.folder')
 
   // create matchers to determine type of folder
   // any string such as 'test' is converted to a RegExp of the form /\/test\// ie to match on /test/
 
-  maps.type.folder = mapMatchers(maps)
+  const mappedFolderMatchers = mapMatchers(maps)
+  info('createMaps', {
+    folder: mappedFolderMatchers
+  })
+  maps.type = maps.type || {}
+  maps.type.folder = mappedFolderMatchers
   return maps
 }
