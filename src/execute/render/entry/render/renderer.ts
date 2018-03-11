@@ -1,10 +1,10 @@
 import {
   defaults
-} from '.'
+} from '../../defaults'
 
 import {
-  createTemplateHandler
-} from './handler'
+  createTemplateProcessor
+} from './processor'
 
 export function renderEntry(entry: any, config: any): Promise<any> {
   let {
@@ -32,18 +32,26 @@ export function renderEntry(entry: any, config: any): Promise<any> {
     })
   }
 
-  const templateFile = resolveTemplateFile(entry)
+  const templateFilePath = resolveTemplateFile(entry)
   info('renderEntry: resolved', {
-    templateFile
+    templateFilePath
   })
 
-  const processTemplate = createTemplateHandler({
+  const processorCfg = {
     renderTemplate,
-    templateFile,
+    templateFilePath,
     templatesPath,
     entry,
     info
-  })
+  }
+  const processTemplate = createTemplateProcessor(processorCfg)
+
+  if (!processTemplate) {
+    error('renderEntry: processTemplate not created', {
+      processTemplate,
+      processorCfg
+    })
+  }
 
   return processTemplate().then((data: any) => {
     entry.data = data

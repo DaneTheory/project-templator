@@ -11,12 +11,12 @@ import {
 } from '..'
 
 export {
-  createTemplateHandler,
+  createTemplateProcessor,
   renderEntry
 } from './render'
 
 export {
-  createFileHandler,
+  createFileProcessor,
   readEntry
 } from './read'
 

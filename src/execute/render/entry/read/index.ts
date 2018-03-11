@@ -1,14 +1,10 @@
 export {
-  defaults
-} from '..'
-
-export {
   createEntryReader
 } from './factory'
 
 export {
-  createFileHandler
-} from './handler'
+  createFileProcessor
+} from './processor'
 
 export {
   readEntry

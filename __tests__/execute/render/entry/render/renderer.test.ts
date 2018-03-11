@@ -10,7 +10,7 @@ import {
 
 const { log } = console
 
-describe('render entry', () => {
+describe('render entry: render', () => {
   const info = (msg: string, data: any) => log(msg, data)
   const error = (msg: string, data?: any) => {
     log(msg, data)
@@ -39,23 +39,40 @@ describe('render entry', () => {
     info
   }
 
+  const params = {
+    name: 'kristian',
+    age: 42
+  }
+
+  const fileName = 'my-template.js.ect'
+  const templatePath = path.join(templatesPath, fileName)
+
+
+  describe('renderTemplate: ect', () => {
+    it.only('renders an ECT template with params', async () => {
+      console.log('RENDER', {
+        templatePath,
+        params
+      })
+      const rendered = await renderTemplate(templatePath, params)
+      log({ rendered, params })
+      expect(rendered.data).toMatch(/name = kristian/)
+    })
+  })
+
   describe('renderEntry: template', () => {
-    const fileName = 'my-template.js.ect'
-    const templatePath = path.join(templatesPath, fileName)
 
     const entry = {
       isTemplate: true,
       templatePath,
       filePath: fileName.replace(/\.ect$/, ''),
-      params: {
-        name: 'kristian'
-      }
+      params
     }
 
     it('renders a single entry by template render', async () => {
       const rendered = await renderEntry(entry, config)
       log({ rendered })
-      expect(rendered).toEqual({})
+      expect(rendered.data).toMatch(/name = kristian/)
     })
   })
 })

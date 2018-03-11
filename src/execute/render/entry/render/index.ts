@@ -1,14 +1,10 @@
 export {
-  defaults
-} from '..'
-
-export {
   createEntryRenderer
 } from './factory'
 
 export {
-  createTemplateHandler
-} from './handler'
+  createTemplateProcessor
+} from './processor'
 
 export {
   renderEntry

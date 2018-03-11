@@ -6,7 +6,7 @@ import {
 
 const { log } = console
 
-describe('render', () => {
+describe('render entry: read', () => {
   const info = (msg: string, data: any) => log(msg, data)
   const error = (msg: string, data?: any) => {
     log(msg, data)
@@ -38,7 +38,7 @@ describe('render', () => {
     it('renders a single entry by copy file content', async () => {
       const rendered = await readEntry(entry, config)
       log({ rendered })
-      expect(rendered).toEqual({})
+      expect(rendered.data).toMatch(/A simple text file/)
     })
   })
 })

@@ -6,7 +6,7 @@ import {
 
 const readFile = promisify(fs.readFile);
 
-export function createFileHandler(config: any) {
+export function createFileProcessor(config: any) {
   const {
     templateFilePath,
     info

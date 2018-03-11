@@ -1,10 +1,10 @@
 import {
-  createFileHandler
-} from './handler'
+  createFileProcessor
+} from './processor'
 
 import {
   defaults
-} from '.'
+} from '../../defaults'
 
 export function readEntry(entry: any, config: any): Promise<any> {
   let {
@@ -31,12 +31,14 @@ export function readEntry(entry: any, config: any): Promise<any> {
     templateFilePath
   })
 
-  const processFile = createFileHandler({
+  const processorCfg = {
     templateFilePath,
     templatesPath,
     entry,
     info
-  })
+  }
+
+  const processFile = createFileProcessor(processorCfg)
 
   return processFile().then((data: any) => {
     entry.data = data
