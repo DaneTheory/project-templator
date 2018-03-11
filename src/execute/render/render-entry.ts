@@ -46,11 +46,23 @@ export function renderEntry(entry: any, config: any): Promise<any> {
     resolveTemplateFile,
     templatePath,
     renderTemplate,
+    error
   } = config
   let info = config.info || defaults.info
   info('renderEntry', {
     entry,
   })
+
+  if (!resolveTemplateFile) {
+    error && error('renderEntry: missing resolveTemplateFile function', {
+      config
+    })
+  }
+  if (!renderTemplate) {
+    error && error('renderEntry: missing renderTemplate function', {
+      config
+    })
+  }
 
   const {
     params,

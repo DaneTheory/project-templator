@@ -22,7 +22,7 @@ describe('render', () => {
     describe('render entries', () => {
       describe('empty entries list', () => {
         it('does not throw', () => {
-          const doRender = () => renderAll(entries)
+          const doRender = () => renderAll(entries, config)
           expect(doRender).not.toThrow()
         })
       })
