@@ -1,10 +1,14 @@
-const defaults = {
-  info: () => { }
+import {
+  defaults
+} from './defaults'
+
+export {
+  defaults
 }
 
 import {
   renderAll
-} from './render-all'
+} from './entries'
 
 export function templateRenderer(config: any = {}) {
   let {

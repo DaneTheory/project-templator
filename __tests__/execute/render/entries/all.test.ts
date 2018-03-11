@@ -1,13 +1,15 @@
 import * as path from 'path'
 import {
   renderAll
-} from '../../../src/execute/render/render-all'
+} from '../../../../src/execute/render/entries'
 
 describe('render', () => {
   const config = {
   }
 
-  const filePath = path.join(__dirname, 'templates', 'my-template.ect')
+  const fixturesPath = path.join(__dirname, '../../..', 'fixtures')
+  const templatesPath = path.join(fixturesPath, 'templates')
+  const filePath = path.join(templatesPath, 'my-template.ect')
 
   const entry = {
     filePath
