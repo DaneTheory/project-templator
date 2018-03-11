@@ -11,6 +11,8 @@ describe('param definitions', () => {
     // info
   }
 
+  const fixturesPath = path.join(__dirname, '../..', 'fixtures')
+
   const paramDefs = {
     valid: {
       string: {
@@ -48,7 +50,7 @@ describe('param definitions', () => {
   })
 
   describe('resolveParamDefsAt', () => {
-    const templatesPath = path.join(__dirname, 'fixtures', 'templates')
+    const templatesPath = path.join(fixturesPath, 'templates')
     const paramsFilePath = path.join(templatesPath, 'template.params.js')
 
     it('resolves data from data src for matching entry keys', () => {

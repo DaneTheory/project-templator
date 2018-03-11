@@ -23,6 +23,7 @@ describe('entry types', () => {
     }
   }
 
+  const fixturesPath = path.join(__dirname, '../..', 'fixtures')
 
   describe('resolveEntryData', () => {
     const entryDataSrc = {
@@ -53,7 +54,7 @@ describe('entry types', () => {
   })
 
   describe('resolveEntryDataAt', () => {
-    const templatesPath = path.join(__dirname, 'fixtures', 'templates')
+    const templatesPath = path.join(fixturesPath, 'templates')
     const filePath = path.join(templatesPath, 'template.data.js')
 
     const opts = {}

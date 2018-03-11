@@ -5,7 +5,8 @@ import {
 } from '../../../src/options/populate'
 
 describe('entry types', () => {
-  const templatesPath = path.join(__dirname, 'fixtures', 'templates')
+  const fixturesPath = path.join(__dirname, '../..', 'fixtures')
+  const templatesPath = path.join(fixturesPath, 'templates')
 
   // const info = (msg: string, data: any) => console.log(msg, data)
   const options = {

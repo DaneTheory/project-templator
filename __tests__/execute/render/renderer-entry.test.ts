@@ -7,21 +7,26 @@ describe('render', () => {
   const config = {
   }
 
-  const filePath = path.join(__dirname, 'templates', 'my-template.ect')
+  const fixturesPath = path.join(__dirname, '../..', 'fixtures')
+  const fileName = 'my-template.js.ect'
+  const templatePath = path.join(fixturesPath, fileName)
 
   const entry = {
-    filePath
+    templatePath,
+    filePath: templatePath.replace(/\.ect$/, ''),
+    params: {
+      name: 'kristian'
+    }
   }
-  const entries = [entry]
 
   describe('renderEntry', () => {
     let rendered: any
-    beforeAll(() => {
-      rendered = renderEntry(entry, config)
+    beforeAll(async () => {
+      rendered = await renderEntry(entry, config)
     })
 
     it('renders a single entry', () => {
-      expect(typeof rendered).toEqual('function')
+      expect(rendered).toEqual({})
     })
   })
 })

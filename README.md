@@ -188,7 +188,7 @@ You could integrate your own templating engine...
 
 ### tree/object transformer
 
-See [obj-template]()
+See [obj-templator](https://www.npmjs.com/package/object-templator) for a new type of templator to generate nested objects or tree structures for `JSON`, `YAML` or `js` files.
 
 ### options
 
@@ -254,6 +254,10 @@ You can use `populateEntry` option to pass a function to further customize the e
   }
 }
 ```
+
+### Templating libs
+
+We recommend using [consolidate](https://github.com/tj/consolidate.js), the Template engine consolidation library by [@TJ](https://github.com/tj) of Express/Node.js fame.
 
 ### Additional template meta data
 
