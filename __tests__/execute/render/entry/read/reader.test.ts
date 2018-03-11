@@ -29,10 +29,12 @@ describe('render entry: read', () => {
 
   describe('readEntry', () => {
     const filePath = 'my-file.txt'
+    const templatePath = path.join(templatesPath, filePath)
 
     const entry = {
       isTemplate: false,
-      filePath
+      filePath,
+      templatePath
     }
 
     it('renders a single entry by copy file content', async () => {

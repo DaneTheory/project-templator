@@ -1,3 +1,4 @@
+import * as path from 'path'
 import {
   createFileProcessor
 } from '../../../../../src/execute/render/entry'
@@ -11,13 +12,17 @@ describe('render entry: read', () => {
     throw new Error(msg)
   }
 
+  const templatesPath = path.join(__dirname, '../../../../', 'fixtures', 'templates')
+  const templateFilePath = path.join(templatesPath, 'my-template.js.ect')
+
   const config = {
+    templateFilePath,
     info,
     error
   }
 
   describe('createFileProcessor', () => {
-    it('creates file handler function', async () => {
+    it('creates file processor function', async () => {
       const handler = createFileProcessor(config)
       expect(typeof handler).toEqual('function')
     })

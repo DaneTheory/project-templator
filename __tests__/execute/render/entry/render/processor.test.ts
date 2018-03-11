@@ -1,3 +1,5 @@
+import * as path from 'path'
+
 import {
   createTemplateProcessor
 } from '../../../../../src/execute/render/entry'
@@ -11,9 +13,14 @@ describe('render entry: render', () => {
     throw new Error(msg)
   }
 
+  const templatesPath = path.join(__dirname, '../../../../', 'fixtures', 'templates')
+  const templateFilePath = path.join(templatesPath, 'my-template.js.ect')
+
+
   const config = {
     info,
-    error
+    error,
+    templateFilePath
   }
 
   describe('createTemplateProcessor', () => {

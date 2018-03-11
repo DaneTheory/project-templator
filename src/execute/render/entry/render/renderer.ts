@@ -33,6 +33,13 @@ export function renderEntry(entry: any, config: any): Promise<any> {
   }
 
   const templateFilePath = resolveTemplateFile(entry)
+  if (!templateFilePath) {
+    error('readEntry: templateFilePath not resolved', {
+      templateFilePath,
+      entry,
+      resolveTemplateFile: resolveTemplateFile.toString()
+    })
+  }
   info('renderEntry: resolved', {
     templateFilePath
   })

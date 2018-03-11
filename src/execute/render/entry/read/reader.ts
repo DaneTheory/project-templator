@@ -16,20 +16,28 @@ export function readEntry(entry: any, config: any): Promise<any> {
   info = info || defaults.info
   error = error || defaults.error
 
-  info('entryReader', {
+  info('readEntry', {
     entry
   })
 
   if (!resolveTemplateFile) {
-    error('entryReader: missing resolveTemplateFile function', {
+    error('readEntry: missing resolveTemplateFile function', {
       config
     })
   }
 
   const templateFilePath = resolveTemplateFile(entry)
-  info('entryReader: resolved', {
+  if (!templateFilePath) {
+    error('readEntry: templateFilePath not resolved', {
+      templateFilePath,
+      entry,
+      resolveTemplateFile: resolveTemplateFile.toString()
+    })
+  }
+  info('readEntry: resolved', {
     templateFilePath
   })
+
 
   const processorCfg = {
     templateFilePath,
@@ -39,6 +47,13 @@ export function readEntry(entry: any, config: any): Promise<any> {
   }
 
   const processFile = createFileProcessor(processorCfg)
+
+  if (!processFile) {
+    error('readEntry: processFile not created', {
+      processFile,
+      processorCfg
+    })
+  }
 
   return processFile().then((data: any) => {
     entry.data = data
