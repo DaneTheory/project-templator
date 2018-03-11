@@ -49,14 +49,10 @@ describe('render entry: render', () => {
 
 
   describe('renderTemplate: ect', () => {
-    it.only('renders an ECT template with params', async () => {
-      console.log('RENDER', {
-        templatePath,
-        params
-      })
+    it('renders an ECT template with params', async () => {
       const rendered = await renderTemplate(templatePath, params)
-      log({ rendered, params })
-      expect(rendered.data).toMatch(/name = kristian/)
+      // log({ rendered, params })
+      expect(rendered).toMatch(/name = kristian/)
     })
   })
 
@@ -71,7 +67,7 @@ describe('render entry: render', () => {
 
     it('renders a single entry by template render', async () => {
       const rendered = await renderEntry(entry, config)
-      log({ rendered })
+      // log({ rendered })
       expect(rendered.data).toMatch(/name = kristian/)
     })
   })
