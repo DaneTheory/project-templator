@@ -1,6 +1,8 @@
 import {
-  create
+  chainFactories
 } from '..'
+
+const create = chainFactories
 
 describe('Filter collisions', () => {
   it('checks for path collisions in list of templateSrc', () => {

@@ -1,3 +1,3 @@
 export {
-  create
+  chainFactories
 } from '../src'

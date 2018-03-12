@@ -1,5 +1,5 @@
 import {
-  create
+  chainFactories
 } from '..'
 
 describe('checkOverlap', () => {
@@ -24,7 +24,7 @@ describe('checkOverlap', () => {
       info
     }
 
-    const checkOverlap = create.checkOverlap(config)
+    const checkOverlap = chainFactories.checkOverlap(config)
     const entriesChecked = checkOverlap(entries)
     expect(entriesChecked.length).toBe(entries.length)
   })
@@ -37,7 +37,7 @@ describe('checkOverlap', () => {
       info
     }
 
-    const checkOverlap = create.checkOverlap(config)
+    const checkOverlap = chainFactories.checkOverlap(config)
     const checkEntries = () => checkOverlap(entries)
     expect(checkEntries).toThrow()
   })
@@ -58,7 +58,7 @@ describe('checkOverlap', () => {
       filter
     }
 
-    const checkOverlap = create.checkOverlap(config)
+    const checkOverlap = chainFactories.checkOverlap(config)
     const entriesCheckedAndFiltered = checkOverlap(entries)
     expect(entriesCheckedAndFiltered.length).toBe(entries.length - 1)
   })

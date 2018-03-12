@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const execute_1 = require("./execute");
 exports.execute = execute_1.execute;
-exports.create = execute_1.create;
 const options_1 = require("./options");
 const deepmerge = require("deepmerge");
 function projectTemplates(tmplMap, options) {

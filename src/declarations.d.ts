@@ -5,3 +5,4 @@ declare module 'lodash';
 declare module 'run-sandboxed';
 declare module 'find-derived';
 declare module 'arr-flatten';
+declare module 'mkdirp-promise';

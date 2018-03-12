@@ -1,6 +1,6 @@
 import {
   execute,
-  create
+  chainFactories
 } from './execute'
 import {
   createOptions
@@ -23,8 +23,8 @@ function projectTemplate(config: any) {
 
 
 export {
-  create,
   execute,
+  chainFactories,
   projectTemplate,
   projectTemplates
 }

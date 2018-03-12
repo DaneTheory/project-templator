@@ -1,6 +1,8 @@
 import {
-  create
+  chainFactories
 } from '..'
+
+const create = chainFactories
 
 describe('filterIgnore', () => {
   const error = () => { }
