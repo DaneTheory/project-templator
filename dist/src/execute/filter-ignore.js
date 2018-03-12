@@ -2,9 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 function filterIgnore(config = {}) {
     const { info, ignore } = config;
-    return (files) => {
-        info('filter template files to ignore');
-        return files.filter(entry => !ignore(entry));
+    return (entries) => {
+        info && info('filter template entries to ignore');
+        return entries.filter(entry => {
+            // by default keeps all
+            return ignore ? !ignore(entry) : true;
+        });
     };
 }
 exports.filterIgnore = filterIgnore;

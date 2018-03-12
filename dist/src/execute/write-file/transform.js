@@ -14,11 +14,12 @@ function getData(name, config = {}) {
         srcMap
     });
 }
+exports.getData = getData;
 function transformData(entry) {
     const { data, type, } = entry;
     const { prependWith, appendWith, error } = entry.config;
-    const prependData = getData('prepend', { src: prependWith, type, entry, error });
-    const appendData = getData('append', { src: appendWith, type, entry, error });
+    const prependData = getData('prepend', { srcMap: prependWith, type, entry, error });
+    const appendData = getData('append', { srcMap: appendWith, type, entry, error });
     let fileData = [];
     prependData && fileData.push(prependData);
     fileData.push(data);

@@ -12,10 +12,12 @@ function createValidatorFn(type, config) {
                 type
             }
         };
-        const errData = deepmerge(defaultErr, options);
-        return !value || typeChecker[type](value) ? value : error(errData);
+        const errData = deepmerge(defaultErr, options || {});
+        const typeCheckerFn = typeChecker[type];
+        return !value || typeCheckerFn(value) ? value : error(errData);
     };
 }
+exports.createValidatorFn = createValidatorFn;
 const types = [
     'string',
     'function',

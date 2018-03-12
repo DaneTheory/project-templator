@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const execute_1 = require("./execute");
+exports.execute = execute_1.execute;
+exports.create = execute_1.create;
 const options_1 = require("./options");
 const deepmerge = require("deepmerge");
 function projectTemplates(tmplMap, options) {
@@ -9,18 +11,12 @@ function projectTemplates(tmplMap, options) {
         return projectTemplate(opts);
     });
 }
+exports.projectTemplates = projectTemplates;
 function projectTemplate(config) {
-    const { templateSrc, resolve = {}, maps, destPath, ignoreFiles = [], warningOn, infoOn, transformFileData, prependWith = {}, appendWith = {}, opts = {}, } = config;
     const options = options_1.createOptions(config);
     Promise.resolve().then(() => {
         execute_1.execute(options);
     });
-    const { transformTree, sandboxed } = require('./transformers');
-    module.exports = {
-        projectTemplate,
-        projectTemplates,
-        transformTree,
-        sandboxed
-    };
 }
+exports.projectTemplate = projectTemplate;
 //# sourceMappingURL=index.js.map

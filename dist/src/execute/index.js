@@ -5,16 +5,21 @@ const recursiveReadDirCb = require("recursive-readdir");
 const entry_details_1 = require("./entry-details");
 const check_overlap_1 = require("./check-overlap");
 const filter_ignore_1 = require("./filter-ignore");
-const render_templates_1 = require("./render-templates");
+const collect_entries_1 = require("./collect-entries");
+const render_1 = require("./render");
 const write_file_1 = require("./write-file");
+const validate_1 = require("./validate");
 const create = {
+    collectEntries: collect_entries_1.collectEntries,
     normalizePaths: normalize_paths_1.normalizePaths,
     entryDetails: entry_details_1.entryDetails,
     checkOverlap: check_overlap_1.checkOverlap,
     filterIgnore: filter_ignore_1.filterIgnore,
-    renderTemplates: render_templates_1.renderTemplates,
-    writeToFile: write_file_1.writeToFile
+    templateRenderer: render_1.templateRenderer,
+    writeToFile: write_file_1.writeToFile,
+    validate: validate_1.validate
 };
+exports.create = create;
 const util_1 = require("util");
 const recursiveReadDir = util_1.promisify(recursiveReadDirCb);
 function execute(config = {}) {
@@ -28,7 +33,8 @@ function execute(config = {}) {
         .then(chain.checkOverlap)
         .then(chain.filterIgnore)
         .then(chain.renderTemplates)
-        .then(chain.writeToFile);
+        .then(chain.writeToFile)
+        .then(chain.validate);
 }
 exports.execute = execute;
 //# sourceMappingURL=index.js.map

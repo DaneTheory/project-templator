@@ -9,7 +9,6 @@
     "sourceMap": true,
     "allowJs": true,
     "moduleResolution": "node",
-    "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -21,9 +20,6 @@
   },
   "exclude": [
     "node_modules",
-    "build",
-    "acceptance-tests",
-    "jest",
-    "src/setupTests.ts"
+    "dist"
   ]
 }

@@ -23,7 +23,7 @@ typeChecker.nonEmpty = {
         return typeChecker.array(value) && value.length > 0;
     },
     object(value) {
-        return typeChecker.array(value) && Object.keys(value).length > 0;
+        return typeChecker.object(value) && Object.keys(value).length > 0;
     }
 };
 //# sourceMappingURL=type-checker.js.map

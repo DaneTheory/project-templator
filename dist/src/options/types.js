@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function createTypeMatchers(config) {
-    const { maps, opts } = config;
+    let { maps, opts } = config;
+    opts = opts || {};
     const unknown = opts.unknown || 'unknown';
     return {
         folder(entry) {

@@ -1,20 +1,34 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const sandbox_1 = require("../../sandbox");
+const run_sandboxed_1 = require("run-sandboxed");
 const deepmerge = require("deepmerge");
-function resolveParamDefs(paramDefs = {}) {
+function resolveParamDefs(paramDefs = {}, options = {}) {
+    const { validate, info } = options;
+    validate && validate.object(paramDefs);
+    info && info('resolveParamDefs', {
+        paramDefs,
+        options
+    });
     const keys = Object.keys(paramDefs);
-    return keys.reduce((acc, key) => {
+    function resolveData(key) {
         const def = paramDefs[key] || {};
+        const inheritKey = def.inherits || def.inherit;
+        delete def.inherits;
+        delete def.inherit;
         // recursively inherit
-        const inheritData = def.inherits ? resolveParamDefs(paramDefs[def.inherits]) : def;
-        acc[key] = deepmerge(def, inheritData || {});
+        const inheritData = inheritKey ? resolveData(inheritKey) : def;
+        return deepmerge(def, inheritData || {});
+    }
+    function resolveParams(acc, key) {
+        acc[key] = resolveData(key);
         return acc;
-    }, paramDefs);
+    }
+    return keys.reduce(resolveParams, paramDefs);
 }
-function resolveParamDefsAt(filePath) {
-    const ctx = sandbox_1.runSandboxedCodeAt(filePath);
-    return resolveParamDefs(ctx.paramDefs);
+exports.resolveParamDefs = resolveParamDefs;
+function resolveParamDefsAt(filePath, options = {}) {
+    const ctx = run_sandboxed_1.runSandboxedCodeAt(filePath, options);
+    return resolveParamDefs(ctx.paramDefs, options);
 }
 exports.resolveParamDefsAt = resolveParamDefsAt;
 //# sourceMappingURL=param-defs.js.map

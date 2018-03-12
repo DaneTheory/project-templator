@@ -14,12 +14,30 @@ const create = {
         };
     }
 };
+function identity(value) {
+    return value;
+}
 const createDefaults = (config) => {
+    const ect = templates_1.createEctTemplateRenderer({
+        templatePath: config.templatePath || (config.templateSrc || {}).templatePath
+    });
     return {
+        templatesFilePath(config) {
+            return path.join(process.cwd(), 'templates');
+        },
+        appendWith: identity,
+        prependWith: identity,
+        transformFileData: identity,
         create,
-        maps: maps_1.maps,
+        maps: maps_1.mapDefaults,
         type: types_1.createTypeMatchers(config),
         params: params_1.createResolveParams(config),
+        fileType(entry) {
+            return entry.isTemplate ? 'template' : 'file';
+        },
+        action(entry) {
+            return entry.fileType === 'template' ? 'render' : 'copy';
+        },
         normalizePath(filePath) {
             const templateExts = Object.keys(config.maps.templateEngines || {}) || config.maps.templateExts || ['ect'];
             const machingTemplateExt = templateExts.find((ext) => {
@@ -43,32 +61,36 @@ const createDefaults = (config) => {
         },
         templateEngines() {
             return {
-                renderEctTemplate: templates_1.createEctTemplateRenderer({
-                    templatePath: config.templatePath || config.templateSrc.templatePath
-                })
+                ect: ect.render
             };
         },
-        populateEntry: populate_1.populateEntry,
+        populateEntry: populate_1.createPopulateEntry(config)
     };
 };
+exports.createDefaults = createDefaults;
+function noop() {
+    return false;
+}
 function createApplyDefaults(config) {
-    const { resolve, create, defaults } = config;
+    let { create, defaults, validate, } = config;
+    validate = validate || {};
     create = create || {};
-    defaults = defaults || {};
-    const validFun = validate['function'];
-    return function (resolve, defaults = {}) {
+    const $defaults = defaults || {};
+    const validFun = validate['function'] || noop;
+    return function (resolve, defaults = $defaults || {}) {
         const defaultFns = Object.keys(defaults);
-        return defaultFns.reduce((acc, key) => {
-            createFun = create[key];
-            defFun = validFun(createFun) ? createFun(config) : defaults[key];
+        function resolveDefaultFn(acc, key) {
+            const createFun = create[key];
+            const defFun = validFun(createFun) ? createFun(config) : defaults[key];
+            const resolveFun = acc[key];
+            const value = validFun(resolveFun) || defFun;
             // validate that each resolve entry is a function, if not use from defaults map
-            acc[key] = validFun(acc[key]) || defFun;
+            acc[key] = value;
             return acc;
-        }, resolve || {});
+        }
+        const reduced = defaultFns.reduce(resolveDefaultFn, resolve || {});
+        return reduced;
     };
 }
-module.exports = {
-    createDefaults,
-    createApplyDefaults
-};
+exports.createApplyDefaults = createApplyDefaults;
 //# sourceMappingURL=defaults.js.map

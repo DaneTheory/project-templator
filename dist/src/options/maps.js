@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = require("./util");
-exports.maps = {
+const flatten = require("arr-flatten");
+const find_derived_1 = require("find-derived");
+exports.mapDefaults = {
     type: {
         ext: {
             src: ['js', 'mjs', 'ts', 'tsx', 'jsx'],
@@ -15,18 +17,41 @@ exports.maps = {
     templateExts: ['ect'],
     params: {},
 };
-function createMaps(maps, options = {}) {
-    const { config, create, defaults, validate } = options;
+function validateMaps(maps, validate) {
     // validate maps entry and all entries within are type: Object
     validate.object(maps);
-    maps.entries((kv) => validate.object(kv[1]));
+    const mapKeys = Object.keys(maps);
+    mapKeys.map((key) => validate.object(maps[key]));
+    return true;
+}
+exports.validateMaps = validateMaps;
+function resolve(resolver, config) {
+    return typeof resolver === 'function' ? resolver(config) : resolver;
+}
+function resolveFirst(resolvers, config) {
+    return find_derived_1.findDerived(resolvers, (resolver) => {
+        return resolve(resolver, config);
+    });
+}
+function resolveTemplateEngines(maps, options) {
+    let { create, defaults, config, info } = options;
+    create = create || {};
+    defaults = defaults || {};
+    info && info('templateEngines', options);
     // create map of template engines to be made available
-    defaults.templateEngines = create.templateEngines(config) || defaults.templateEngines;
-    maps.templateEngines = Object.assign(defaults.templateEngines, maps.templateEngines || {});
-    // create matchers to determine type of folder
-    // any string such as 'test' is converted to a RegExp of the form /\/test\// ie to match on /test/
-    maps.type.folder = Object.keys(maps.type.folder).map(type => {
-        const matchers = maps.type.folder[type];
+    const resolvers = [create.templateEngines, defaults.templateEngines];
+    defaults.templateEngines = resolveFirst(resolvers, config) || {};
+    info && info('default templateEngines', defaults.templateEngines);
+    const result = Object.assign(defaults.templateEngines, maps.templateEngines || {});
+    info && info('templateEngines:', result);
+    return result;
+}
+exports.resolveTemplateEngines = resolveTemplateEngines;
+function mapMatchers(maps) {
+    const folder = (maps.type || {}).folder;
+    const mappedFolders = Object.keys(folder || []);
+    const regExpFolders = mappedFolders.map((type) => {
+        const matchers = folder[type];
         return matchers.map((m) => {
             return typeof m === 'string' ? util_1.addMissing(m, {
                 preFix: '/',
@@ -34,6 +59,43 @@ function createMaps(maps, options = {}) {
             }) : m;
         }).map(util_1.toRegExp);
     });
+    return flatten(regExpFolders);
+}
+exports.mapMatchers = mapMatchers;
+function createMaps(maps, options = {}) {
+    let { config, create, validate, defaults, info, error } = options;
+    maps = maps || {};
+    info && info('createMaps', {
+        maps,
+        options
+    });
+    if (!maps) {
+        error && error('createMaps: Missing maps', {
+            maps
+        });
+    }
+    if (!validate) {
+        error && error('createMaps: Missing validate function', {
+            options
+        });
+    }
+    validateMaps(maps, validate);
+    info && info('createMaps: resolve templateEngines');
+    // create map of template engines to be made available
+    const templateEngines = resolveTemplateEngines(maps, { create, defaults, config, info, error });
+    info && info('createMaps: templateEngines', {
+        templateEngines
+    });
+    maps.templateEngines = templateEngines;
+    info('createMaps: set type.folder');
+    // create matchers to determine type of folder
+    // any string such as 'test' is converted to a RegExp of the form /\/test\// ie to match on /test/
+    const mappedFolderMatchers = mapMatchers(maps);
+    info('createMaps', {
+        folder: mappedFolderMatchers
+    });
+    maps.type = maps.type || {};
+    maps.type.folder = mappedFolderMatchers;
     return maps;
 }
 exports.createMaps = createMaps;
