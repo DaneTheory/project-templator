@@ -2,13 +2,11 @@
 
 [![npm version](https://badge.fury.io/js/project-template.svg)](https://badge.fury.io/js/project-template)
 
-Generate a project based on a directory of template files and corresponding template values.
+Transform (or generate) a project based on a directory of template files and configurations.
 
 This is an extension of [project-template](https://github.com/aiham/project-template) by [@aiham](https://github.com/aiham) that is now highly customizable.
 
 Can be used in combination with [sao](https://sao.js.org) to great effect :)
-
-We intend to use this powerful combination to generate projects and packages for [comptroller](https://github.com/kristianmandrup/comptroller) the smart monorepo manager.
 
 ## Requirements
 
@@ -170,13 +168,22 @@ projectTemplate({
 
 - Directory structure of files in `templatePath` is by default maintained in `buildPath` but can easily be customized by supplying a `destPath` function
 - Files in `templatePath` without matching template extension are just copied over to `destPath` as they are without template rendering or transformation
-- You cannot have two files with the same file path where one is a template and one isn't. The template file will be stripped off its template extension and there will then be a matching `filePath` conflict
+- If you have two files with the same file path where one is a template and one isn't, the template file will be stripped off its template extension and there will then be a matching `filePath` conflict. You can either choose to abort and flag the conflict an an error or continue with one of the files taking precedence.
 
 ## API
 
 ### projectTemplate(options) -&gt; Promise&lt;Array&lt;String&gt;&gt;
 
 ### projectTemplates(tmplMap, options)
+
+## Composability
+
+This project is designed for easy composition of a templating (or file transformation) solution that suits your needs.
+
+It can be used with a number of other libraries,  such as:
+
+- [action-file-gen](https://www.npmjs.com/package/action-file-gen) generates files based on actions, inspired by [plop](https://www.npmjs.com/package/plop)
+- [simple-vfs](https://www.npmjs.com/package/simple-vfs) a simple virtual File System
 
 ### Custom template engine
 

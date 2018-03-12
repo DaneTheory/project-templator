@@ -13,19 +13,27 @@ import {
   filterIgnore
 } from './filter-ignore'
 import {
+  collectEntries
+} from './collect-entries'
+import {
   templateRenderer
 } from './render'
 import {
   writeToFile
 } from './write-file'
+import {
+  validate
+} from './validate'
 
 const create = {
+  collectEntries,
   normalizePaths,
   entryDetails,
   checkOverlap,
   filterIgnore,
   templateRenderer,
-  writeToFile
+  writeToFile,
+  validate
 }
 
 export {
@@ -48,6 +56,8 @@ export function execute(config: any = {}) {
     .then(chain.entryDetails)
     .then(chain.checkOverlap)
     .then(chain.filterIgnore)
+    // .then(chain.actions)
     .then(chain.renderTemplates)
     .then(chain.writeToFile)
+    .then(chain.validate)
 }

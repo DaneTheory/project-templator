@@ -2,6 +2,24 @@ import {
   intersection
 } from 'lodash'
 
+const defaults = {
+  keep(entry: any, options: any = {}) {
+    return options.override === 'file' ? !entry.isTemplate : entry.isTemplate
+  }
+}
+
+// templates may override non-templates on collision
+export function filter(entries: any[], filePaths: any = {}, config: any = {}) {
+
+  const keep = config.keep || defaults.keep
+  return entries.filter((e: any) => {
+    // filter out any entry that is not a template but is included in list of invalid overlap
+    if (filePaths.invalid.includes(e.filePath)) {
+      return keep(e)
+    } else return true
+  })
+}
+
 export function checkOverlap(config: any = {}) {
   const {
     error,
@@ -25,7 +43,7 @@ export function checkOverlap(config: any = {}) {
       );
     }
     if (filter) {
-      entries = filter(entries, { invalid, template, ordinary })
+      entries = filter(entries, { invalid, template, ordinary }, config)
     }
     return entries;
   }

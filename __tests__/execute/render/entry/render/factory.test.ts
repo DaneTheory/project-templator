@@ -4,7 +4,7 @@ import {
 
 const { log } = console
 
-describe('render entry', () => {
+describe('render entry: render', () => {
   const info = (msg: string, data: any) => log(msg, data)
   const error = (msg: string, data?: any) => {
     log(msg, data)

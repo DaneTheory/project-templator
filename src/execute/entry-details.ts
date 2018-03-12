@@ -48,8 +48,12 @@ export function entryDetails(config: any = {}) {
       entry.opts = config.opts // for convenience
       entry.name = path.basename(filePath, fullExt)
       entry.dirName = path.dirname(filePath)
-
       entry.isTemplate = validate && validate.function(isTemplate) ? isTemplate(entry.templatePath) : false
+
+      // make render more extensible: can have any type of side effect!
+      entry.fileType = resolve.fileType ? resolve.fileType(entry) : 'file'
+      entry.action = resolve.action ? resolve.action(entry) : 'copy'
+
       entry.fileName = [entry.name, entry.fileExt].join('.')
 
       const type = resolve.type

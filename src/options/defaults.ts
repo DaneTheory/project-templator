@@ -46,6 +46,12 @@ const createDefaults = (config: any) => {
     maps: mapDefaults,
     type: createTypeMatchers(config),
     params: createResolveParams(config),
+    fileType(entry: any) {
+      return entry.isTemplate ? 'template' : 'file'
+    },
+    action(entry: any) {
+      return entry.fileType === 'template' ? 'render' : 'copy'
+    },
     normalizePath(filePath: string) {
       const templateExts = Object.keys(config.maps.templateEngines || {}) || config.maps.templateExts || ['ect']
 
