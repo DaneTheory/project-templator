@@ -14,8 +14,8 @@ import {
   templateRenderer
 } from './render'
 import {
-  writeToFile
-} from './write-file'
+  entryToDestWriter
+} from './write'
 import {
   validate
 } from './validate'
@@ -30,7 +30,7 @@ const chainFactories = {
   checkOverlap,
   filterIgnore,
   templateRenderer,
-  writeToFile,
+  entryToDestWriter,
   validate
 }
 

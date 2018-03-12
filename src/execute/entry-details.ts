@@ -52,7 +52,7 @@ export function entryDetails(config: any = {}) {
 
       // make render more extensible: can have any type of side effect!
       entry.fileType = resolve.fileType ? resolve.fileType(entry) : 'file'
-      entry.action = resolve.action ? resolve.action(entry) : 'copy'
+      entry.action = resolve.action ? resolve.action(entry) : { dest: 'write', src: 'read' }
 
       entry.fileName = [entry.name, entry.fileExt].join('.')
 

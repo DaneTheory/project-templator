@@ -1,7 +1,7 @@
 import {
   transformData,
   getData
-} from '../../../src/execute/write-file/transform'
+} from '../../src/execute/transform'
 
 describe('transform', () => {
   const entry = {

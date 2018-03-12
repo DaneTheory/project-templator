@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chain_factories_1 = require("./chain-factories");
-const defaults = {
+exports.chainFactories = chain_factories_1.chainFactories;
+exports.defaults = {
     chainFactories: chain_factories_1.chainFactories
 };
 function createChain(chainFactories, config) {
@@ -15,7 +16,7 @@ function createChain(chainFactories, config) {
 exports.createChain = createChain;
 function execute(config = {}) {
     let { chainFactories } = config;
-    chainFactories = chainFactories || defaults.chainFactories;
+    chainFactories = chainFactories || exports.defaults.chainFactories;
     const chain = createChain(chainFactories, config);
     return chain.collectEntries(config)
         .then(chain.normalizePaths)
