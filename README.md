@@ -1,12 +1,10 @@
-# project-template
-
-[![npm version](https://badge.fury.io/js/project-template.svg)](https://badge.fury.io/js/project-template)
+# Project templator
 
 Transform (or generate) a project based on a directory of template files and configurations.
 
-This is an extension of [project-template](https://github.com/aiham/project-template) by [@aiham](https://github.com/aiham) that is now highly customizable.
+This is an extension of [project-template](https://github.com/aiham/project-template) by [@aiham](https://github.com/aiham) that is now highly customizable and designed for composition.
 
-Can be used in combination with [sao](https://sao.js.org) to great effect :)
+Can be used in combination with [sao](https://sao.js.org) and similar libs to great effect :)
 
 ## Requirements
 
@@ -184,6 +182,7 @@ It can be used with a number of other libraries,  such as:
 
 - [action-file-gen](https://www.npmjs.com/package/action-file-gen) generates files based on actions, inspired by [plop](https://www.npmjs.com/package/plop)
 - [simple-vfs](https://www.npmjs.com/package/simple-vfs) a simple virtual File System
+- [multi-prompt](https://www.npmjs.com/package/multi-prompt) ask propts in multiple sections
 
 ### Custom template engine
 
