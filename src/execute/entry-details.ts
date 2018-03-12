@@ -35,7 +35,7 @@ export function entryDetails(config: any = {}) {
       } = entry
 
       entry.config = config
-      entry.filePath = resolve ? resolve.normalizePath(filePath) : filePath
+      entry.filePath = resolve ? resolve.stripTemplateExt(filePath) : filePath
       if (!entry.filePath) {
         error('entryDetails: invalid filePath for entry', {
           entry

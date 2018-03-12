@@ -52,7 +52,7 @@ const createDefaults = (config: any) => {
     action(entry: any) {
       return entry.fileType === 'template' ? 'render' : 'copy'
     },
-    normalizePath(filePath: string) {
+    stripTemplateExt(filePath: string) {
       const templateExts = Object.keys(config.maps.templateEngines || {}) || config.maps.templateExts || ['ect']
 
       const machingTemplateExt = templateExts.find((ext: string) => {
