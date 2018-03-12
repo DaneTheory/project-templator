@@ -1,0 +1,21 @@
+{
+  "name": "my-templates",
+  "version": "1.0.1",
+  "templates": {
+    "config": {
+      "extends": [
+        "@company/react-base-templates"
+      ]
+    },
+    "data": {
+      "type": {
+        "entity": {
+          "component": {
+            "type": "component"
+          }
+        }
+      }
+    },
+    "params": "react-templates.params.js"
+  }
+}
