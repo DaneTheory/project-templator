@@ -1,14 +1,9 @@
-import {
-  runSandboxedCodeAt
-} from 'run-sandboxed'
-
-const deepmerge = require('deepmerge')
-
+import * as deepmerge from 'deepmerge'
 const $defaults = {
   entryTypes: ['folder', 'entity', 'name', 'filePath']
 }
 
-export function resolveEntryData(entry: any, entryDataSrc: any = {}, options: any = {}) {
+export function resolveTypeMappedEntryData(entry: any, entryDataSrc: any = {}, options: any = {}) {
   let {
     entryTypes,
     defaults,
@@ -37,12 +32,7 @@ export function resolveEntryData(entry: any, entryDataSrc: any = {}, options: an
   return entryTypes.reduce(resolveEntryAt, {})
 }
 
-export function resolveEntryDataAt(filePath: string, entry: any, options: any) {
-  const ctx = runSandboxedCodeAt(filePath, options)
-  const { entryData } = ctx
-  const params = resolveEntryData(entry, entryData.type, options)
-  return {
-    params,
-    uses: entryData.uses
-  }
-}
+
+
+
+

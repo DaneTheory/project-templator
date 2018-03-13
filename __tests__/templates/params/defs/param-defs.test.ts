@@ -1,9 +1,13 @@
 import * as path from 'path'
 
 import {
-  resolveParamDefsAt,
-  resolveParamDefs
-} from '../../../src/options/populate/param-defs'
+  resolveParamDefsFor,
+} from '../../../../src/templates/params'
+
+import {
+  paramDefsFromJsFilePath
+} from '../../../../src/templates/params/defs/read'
+
 
 describe('param definitions', () => {
   const templatesParamsFile = 'template.params.js'
@@ -32,7 +36,7 @@ describe('param definitions', () => {
   describe('resolveParamDefs', () => {
     it('resolves params defs from valid definition object', () => {
 
-      const data = resolveParamDefs(paramDefs.valid, options)
+      const data = resolveParamDefsFor(paramDefs.valid, options)
       expect(data).toEqual({
         string: {
           type: 'string',
@@ -46,7 +50,7 @@ describe('param definitions', () => {
     })
 
     it('invalid definition object throws', () => {
-      const getData = () => resolveParamDefs(paramDefs.invalid, options)
+      const getData = () => resolveParamDefsFor(paramDefs.invalid, options)
       expect(getData).toThrow()
     })
   })
@@ -56,7 +60,7 @@ describe('param definitions', () => {
     const paramsFilePath = path.join(templatesPath, templatesParamsFile)
 
     it('resolves data from data src for matching entry keys', () => {
-      const data = resolveParamDefsAt(paramsFilePath, options)
+      const data = paramDefsFromJsFilePath(paramsFilePath, options)
       expect(data).toEqual({
         string: {
           type: 'string',

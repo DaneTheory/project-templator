@@ -1,34 +1,11 @@
-import * as path from 'path'
-import * as fs from 'fs'
+import * as deepmerge from 'deepmerge'
 import {
-  promisify
-} from 'util'
-import {
-  runSandboxedCodeAt
-} from 'run-sandboxed'
+  path,
+  readJsonFile,
+  runSandboxedCodeAt,
+  readTemplatesConfigurationFromJson
+} from '../read-src'
 
-const deepmerge = require('deepmerge')
-
-const readFile = promisify(fs.readFile);
-
-export async function readJsonFile(jsonFilePath: string, options: any = {}): Promise<any> {
-  try {
-    const json = await readFile(jsonFilePath, 'utf8')
-    return JSON.parse(json)
-  } catch (err) {
-    return {}
-  }
-}
-
-export async function readPackageJson(config: any): Promise<any> {
-  const packageFilePath = path.join(config.templatesPath, 'package.json')
-  return await readJsonFile(packageFilePath)
-}
-
-export async function readTemplatesConfigurationFromJson(config: any): Promise<any> {
-  const pkg: any = await readPackageJson(config)
-  return pkg.templates || {}
-}
 
 export async function readConfigFromPackage(config: any) {
   const templates = await readTemplatesConfigurationFromJson(config)
@@ -56,11 +33,12 @@ export async function readFromConfigJsonFile(config: any) {
   return await readJsonFile(templatesConfigFile)
 }
 
-export async function templateConfig(config: any) {
+export async function templatesConfig(config: any) {
   const jsConf = readFromConfigJsFile(config)
   const confs = await Promise.all([
     readFromConfigJsonFile(config),
     readConfigFromPackage(config)
   ])
-  return deepmerge({}, confs[0], confs[1], jsConf)
+  const mergedConfs = deepmerge(confs[0], confs[1])
+  return deepmerge(mergedConfs, jsConf)
 }

@@ -2,7 +2,7 @@ import * as path from 'path'
 
 import {
   entryParams,
-} from '../../../src/options/populate/entry-params'
+} from '../../../../src/templates/params'
 
 describe('entry params', () => {
   const fixturesPath = path.join(__dirname, '../..', 'fixtures')

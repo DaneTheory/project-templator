@@ -1,6 +1,6 @@
 import {
-  templateConfig
-} from '../../src/templates/config'
+  templatesConfig
+} from '../../../src/templates/config'
 
 describe('templates.config', () => {
   const options: any = {
@@ -11,7 +11,7 @@ describe('templates.config', () => {
       data: {}
     }
 
-    const config: any = templateConfig(options)
+    const config: any = templatesConfig(options)
     expect(config.data).toEqual(expected.data)
   })
 
@@ -20,7 +20,7 @@ describe('templates.config', () => {
       data: {}
     }
 
-    const config: any = templateConfig(options)
+    const config: any = templatesConfig(options)
     expect(config.data).toEqual(expected.data)
   })
 })

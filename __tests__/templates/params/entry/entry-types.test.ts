@@ -1,9 +1,13 @@
 import * as path from 'path'
 
 import {
-  resolveEntryDataAt,
-  resolveEntryData
-} from '../../../src/options/populate/entry-types'
+  resolveParamsEntryDataFor
+} from '../../../../src/templates/params'
+
+import {
+  entryDataFromJsFilePath
+} from '../../../../src/templates/params/data/read'
+
 
 describe('entry types', () => {
   // const options = {
@@ -41,7 +45,7 @@ describe('entry types', () => {
       }
     }
     it('resolves data from data src for matching entry keys', () => {
-      const data = resolveEntryData(entry.matching, entryDataSrc)
+      const data = resolveParamsEntryDataFor(entry.matching, entryDataSrc)
       expect(data).toEqual({
         x: 42,
         type: 'web'
@@ -49,7 +53,7 @@ describe('entry types', () => {
     })
 
     it('resolves to empty data when no matching entry keys', () => {
-      const data = resolveEntryData(entry.noMatch, entryDataSrc)
+      const data = resolveParamsEntryDataFor(entry.noMatch, entryDataSrc)
       expect(data).toEqual({})
     })
 
@@ -62,7 +66,7 @@ describe('entry types', () => {
     const opts = {}
 
     it('resolves data from data src for matching entry keys', () => {
-      const { params } = resolveEntryDataAt(filePath, entry.matching, opts)
+      const { params } = entryDataFromJsFilePath(filePath, opts)
       expect(params).toEqual({
         age: 27,
         name: 'kristian',
@@ -71,7 +75,7 @@ describe('entry types', () => {
     })
 
     it('resolves to empty data when no matching entry keys', () => {
-      const { params } = resolveEntryDataAt(filePath, entry.noMatch, opts)
+      const { params } = entryDataFromJsFilePath(filePath, opts)
       expect(params).toEqual({})
     })
   })

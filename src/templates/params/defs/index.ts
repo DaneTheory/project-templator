@@ -1,7 +1,3 @@
-import {
-  runSandboxedCodeAt
-} from 'run-sandboxed'
-
 import * as deepmerge from 'deepmerge'
 
 export function resolveParamDefs(paramDefs = {}, options: any = {}) {
@@ -37,7 +33,12 @@ export function resolveParamDefs(paramDefs = {}, options: any = {}) {
   return keys.reduce(resolveParams, paramDefs)
 }
 
-export function resolveParamDefsAt(filePath: string, options: any = {}) {
-  const ctx = runSandboxedCodeAt(filePath, options)
-  return resolveParamDefs(ctx.paramDefs, options)
+import {
+  retrieveParamDefs
+} from './retrieve'
+
+export function resolveParamDefsFor(config: any, options: any = {}) {
+  const paramDefs = retrieveParamDefs(config, options)
+  return resolveParamDefs(paramDefs, options)
 }
+

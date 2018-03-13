@@ -2,7 +2,7 @@
 
 import {
   validateParams
-} from '../../../src/options/populate/validate-params'
+} from '../../../src/templates/params'
 
 describe('validate entry params', () => {
   const info = (msg: string, data: any) => console.log(msg, data)
