@@ -1,19 +1,11 @@
-import * as path from 'path'
-
 import {
   resolveParamsEntryDataFor
-} from '../../../../src/templates/params'
-
-import {
-  entryDataFromJsFilePath
-} from '../../../../src/templates/params/data/read'
+} from '../../../../../src/templates/params'
 
 
 describe('entry types', () => {
   // const options = {
   // }
-
-  const templatesDataFile = 'templates.data.js'
 
   const entry = {
     matching: {
@@ -28,8 +20,6 @@ describe('entry types', () => {
       }
     }
   }
-
-  const fixturesPath = path.join(__dirname, '../..', 'fixtures')
 
   describe('resolveEntryData', () => {
     const entryDataSrc = {
@@ -57,26 +47,5 @@ describe('entry types', () => {
       expect(data).toEqual({})
     })
 
-  })
-
-  describe('resolveEntryDataAt', () => {
-    const templatesPath = path.join(fixturesPath, 'templates')
-    const filePath = path.join(templatesPath, templatesDataFile)
-
-    const opts = {}
-
-    it('resolves data from data src for matching entry keys', () => {
-      const { params } = entryDataFromJsFilePath(filePath, opts)
-      expect(params).toEqual({
-        age: 27,
-        name: 'kristian',
-        type: 'web'
-      })
-    })
-
-    it('resolves to empty data when no matching entry keys', () => {
-      const { params } = entryDataFromJsFilePath(filePath, opts)
-      expect(params).toEqual({})
-    })
   })
 })

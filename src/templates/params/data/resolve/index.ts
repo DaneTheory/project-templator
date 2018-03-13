@@ -2,6 +2,10 @@ import {
   resolveTypeMappedEntryData
 } from './type-mapped'
 
+export {
+  resolveTypeMappedEntryData
+}
+
 export function resolveParamsEntryDataFor(entry: any, entryData: any, options?: any) {
   const params = resolveTypeMappedEntryData(entry, entryData.type, options)
   return {
