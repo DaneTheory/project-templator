@@ -25,6 +25,11 @@ You can use `populateEntry` option to pass a function to further customize the e
   fileExt: 'ts',
   dirName: 'src/helpers',
   isTemplate: true,
+  action: {
+    src: 'render',
+    dest: 'write'
+  },
+  fileType: 'template',
   type: {
     file: 'test:src', // create your own convention
     folder: 'helpers',
@@ -42,5 +47,6 @@ You can use `populateEntry` option to pass a function to further customize the e
 }
 ```
 
-After creating the entry, we use it to lookup into this `entryType` map:
-It will look for matching `folder`, `entity`, `name`, `filePath`  in this sequence and merge each matching object in this order from most general to most specific (ie. higher precedence).
+After creating the entry, we use it to lookup into the `maps.type` in config to find additional params data for the entry.
+
+We will look for matching `folder`, `entity`, `name`, `filePath`  in this sequence and merge each matching object in this order from most general to most specific (ie. higher precedence).

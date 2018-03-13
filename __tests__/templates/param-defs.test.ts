@@ -6,6 +6,8 @@ import {
 } from '../../../src/options/populate/param-defs'
 
 describe('param definitions', () => {
+  const templatesParamsFile = 'template.params.js'
+
   // const info = (msg: string, data: any) => console.log(msg, data)
   const options = {
     // info
@@ -51,7 +53,7 @@ describe('param definitions', () => {
 
   describe('resolveParamDefsAt', () => {
     const templatesPath = path.join(fixturesPath, 'templates')
-    const paramsFilePath = path.join(templatesPath, 'template.params.js')
+    const paramsFilePath = path.join(templatesPath, templatesParamsFile)
 
     it('resolves data from data src for matching entry keys', () => {
       const data = resolveParamDefsAt(paramsFilePath, options)

@@ -1,6 +1,6 @@
 import {
   entryParams
-} from './entry-params'
+} from '../../templates/entry-params'
 
 export function createPopulateEntry(config: any) {
   const {

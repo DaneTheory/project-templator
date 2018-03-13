@@ -1,11 +1,11 @@
 # Project templator
 
-A generic library to transform a set of entries into side effects, such as writing files in a project.
+Next generation templating/transformation engine and pipeline system.
+Transform a set of entries into side effects, such as writing or modifying files in a project.
+
+Project templator has been designed to be highly customizable and composable, making minimum assumptions on end use. It has been designed for easy integration with other libraries.
+
 The basic configuration can be used to take a set of templates from one or more folders, render each with relevant data parameters and write the result to files in one or more destination folders.
-
-This library is an extension of [project-template](https://github.com/aiham/project-template) by [@aiham](https://github.com/aiham).
-
-Project templator, however, has been designed to be highly customizable and composable making minimum assumptions on end use. Project templator should be easy to integrate with other libraries.
 
 ## Requirements
 
@@ -13,51 +13,51 @@ Project templator, however, has been designed to be highly customizable and comp
 
 ## Install
 
+### Yarn
+
 ```sh
 yarn add project-templator
 ```
+
+### Npm
 
 ```sh
 npm install project-templator -S
 ```
 
-## Example
-
-```sh
-yarn run example
-```
-
-See [example/index.js](example/index.js)
-
-Note: The example is currently the unmodified example from [project-template](https://github.com/aiham/project-template) and might be broken and need an update.
-
-Please see the test suite in the `/__tests__` folder for details on how to use the API and compose your own example/solution.
-
 ## Usage
+
+Use `projectTemplates` to run templating on one or more src -> destination
+
+On a single src -> destination, named `src`
 
 ```js
 import {
-  projectTemplate,
   projectTemplates
 } from 'project-template'
 
-projectTemplate({
-  templatePath: '/path/to/templates',
-  destPath: '/path/to/build',
-  params: {
-    'path/to/file.txt': {
-      firstParam: 'First param value',
-      secondParam: 'Second param value',
-    },
-    'path/to/different/file.txt': {
-      anotherParam: 'Another param value',
-    },
-  },
+projectTemplates(
+  src: {
+    templatePath: '/path/to/templates',
+    destPath: '/path/to/dest',
+    params: {
+      'path/to/file.txt': {
+        firstParam: 'First param value',
+        secondParam: 'Second param value',
+      },
+      'Readme.txt': {
+        anotherParam: 'Another param value',
+      },
+    }
+  }
 })
-.then(files => console.log('Done', files))
+.then(entries => console.log('Done', entries))
 .catch(err => console.error('Error', err));
+```
 
+On multiple src -> destination, here named `src` and `test`
 
+```js
 projectTemplates({
   src: {
     templatePath: '/path/to/templates/src',
@@ -70,7 +70,7 @@ projectTemplates({
     // ... more test template options
   }
 }, {
-  // generic templating options used as defaults
+  // generic templating options
 })
 ```
 
@@ -188,6 +188,24 @@ Files in `templatePath` that are not found to be a template, are copied over to 
 
 If you have two files with the same file path where one is a template and one isn't, the template file will be stripped off its template extension and there will then be a matching `filePath` conflict. You can either choose to abort and flag the conflict an an error or continue with one of the files taking precedence (pass `override: 'template'` or `override: 'file'` option respectively).
 
+## Example
+
+```sh
+yarn run example
+```
+
+See [example/index.js](example/index.js)
+
+Note: The example is currently the unmodified example from [project-template](https://github.com/aiham/project-template) and might be broken and need an update.
+
+Please see the test suite in the `/__tests__` folder for details on how to use the API and compose your own example/solution.
+
+## Contributors
+
+This library is an extension of [project-template](https://github.com/aiham/project-template) by [@aiham](https://github.com/aiham).
+
 ### License
 
 MIT
+
+Copyright 2018 Kristian Mandrup

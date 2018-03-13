@@ -9,6 +9,8 @@ describe('entry types', () => {
   // const options = {
   // }
 
+  const templatesDataFile = 'templates.data.js'
+
   const entry = {
     matching: {
       type: {
@@ -55,7 +57,7 @@ describe('entry types', () => {
 
   describe('resolveEntryDataAt', () => {
     const templatesPath = path.join(fixturesPath, 'templates')
-    const filePath = path.join(templatesPath, 'template.data.js')
+    const filePath = path.join(templatesPath, templatesDataFile)
 
     const opts = {}
 

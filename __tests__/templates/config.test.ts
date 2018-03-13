@@ -1,6 +1,6 @@
 import {
   templateConfig
-} from '../../../src/templates/config'
+} from '../../src/templates/config'
 
 describe('templates.config', () => {
   const options: any = {
