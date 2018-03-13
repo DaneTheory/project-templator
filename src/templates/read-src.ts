@@ -23,9 +23,13 @@ export async function readJsonFile(jsonFilePath: string, options: any = {}): Pro
   }
 }
 
-export async function readPackageJson(config: any): Promise<any> {
-  const packageFilePath = path.join(config.templatesPath, 'package.json')
+export async function readPackageJsonAt(filePath: any): Promise<any> {
+  const packageFilePath = path.join(filePath, 'package.json')
   return await readJsonFile(packageFilePath)
+}
+
+export async function readPackageJson(config: any): Promise<any> {
+  return await readPackageJsonAt(config.templatesPath)
 }
 
 export async function readTemplatesConfigurationFromJson(config: any): Promise<any> {
