@@ -8,7 +8,7 @@ import {
 
 import {
   filterFoundPackages
-} from '../npm/find-package'
+} from '../utils'
 
 function saoCachePath(dir: string) {
   return path.join(userHome, '.sao', dir)
