@@ -133,7 +133,27 @@ When Project templator resolves the template sources, it will "merge" the files 
 
 You may incorporate conflict resolution strategies such as using the template package version or simply first (or last) wins etc.
 
-## Implementation
+### Strategies available
+
+Currently work has been done to implement the following strategies:
+
+- npm module traversal
+- monorepo packages lookup
+- cache lookup (such as packages retrieved and cached by [sao](https://github.com/saojs/sao))
+
+Monorepo solutions:
+
+- [lerna](https://lernajs.io/)
+- [yarn workspaces](https://yarnpkg.com/en/docs/workspaces)
+- [comptroller](https://github.com/kristianmandrup/comptroller)
+
+It should be pretty easy to add additional strategies, such as:
+
+- npm/yarn lookup for globally installed modules
+- remote retrieval
+- custom package convention, even looking up via web service or DB lookup!
+
+### Implementation: merging template files
 
 Some logic for extending/merging templates from multiple sources can be found in [package-retriever](https://github.com/kristianmandrup/package-retriever/blob/master/src/extend/index.ts)
 
