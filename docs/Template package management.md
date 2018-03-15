@@ -153,8 +153,15 @@ It should be pretty easy to add additional strategies, such as:
 - remote retrieval
 - custom package convention, even looking up via web service or DB lookup!
 
-### Implementation: merging template files
+## Implementation
 
-Some logic for extending/merging templates from multiple sources can be found in [package-retriever](https://github.com/kristianmandrup/package-retriever/blob/master/src/extend/index.ts)
+### template package lookup
 
-Please help make this happen!
+The current template lookup strategies implemented can be found in `src/templates/lookup/strategies`
+Some tests of each strategy can be found in `__tests__/templates/lookup`. Still needs some work ;)
+
+### extends
+
+Some logic for extending/merging templates from multiple sources can be found in `src/templates/extends` and a test suite showcasing how to use it, in `__tests__/templates/extends`
+
+Still needs some work ;)

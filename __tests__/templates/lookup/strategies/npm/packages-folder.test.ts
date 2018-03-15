@@ -1,17 +1,14 @@
 import * as mockFs from 'mock-fs'
 import * as path from 'path'
-// async function cacheLookup(packageName: string, options: any): Promise<string>
 import {
-  cacheLookup
-} from '../../../../src/extends/strategies/cache'
-
-// Uses conventions from sao (or package-retriever) to locate package in "global" cache
+  npmFindPackageViaPackagesFolder
+} from '../../../../../src/templates/lookup/strategies/npm/packages-folder'
 
 import {
   fakeFs
 } from '../fs'
 
-describe('cache lookup', () => {
+describe('npm traverse', () => {
 
   // TODO: use mockFs
   beforeAll(() => {
@@ -48,27 +45,28 @@ describe('cache lookup', () => {
     parent: createTemplatesPath(parentPackagePath)
   }
 
-  // npmFindPackage(packageName: string, config: any = {}): Promise<IPackageFindResult>
-  describe('npmFindPackage', () => {
 
+
+  // npmFindPackageViaPackagesFolder(packageName: string, config: any = {}): Promise<string>
+  describe('npmFindTemplatesPackagePath', () => {
     describe('no matching package to be found', () => {
-      it('aborts with empty result, ie. found: false', async () => {
-        const pkgPath: any = await cacheLookup(packageName.none, config)
-        expect(pkgPath).toBeFalsy()
+      it('aborts with no package path', async () => {
+        const packagePath: string = await npmFindPackageViaPackagesFolder(packageName.none, config)
+        expect(packagePath).toBeFalsy()
       })
     })
 
-    describe('matching package in sister folder', () => {
-      it('finds matching package', async () => {
-        const pkgPath: any = await cacheLookup(packageName.sister, config)
-        expect(pkgPath).toEqual(sisterPackagePath)
+    describe('parent package', () => {
+      it('can not be found via packages folder strategy', async () => {
+        const packagePath: string = await npmFindPackageViaPackagesFolder(packageName.parent, config)
+        expect(packagePath).toBeFalsy()
       })
     })
 
-    describe('matching package in parent folder', () => {
-      it('finds matching package', async () => {
-        const pkgPath: any = await cacheLookup(packageName.parent, config)
-        expect(pkgPath).toEqual(parentPackagePath)
+    describe('matching package in packages folder', () => {
+      it('finds matching package path', async () => {
+        const packagePath: string = await npmFindPackageViaPackagesFolder(packageName.sister, config)
+        expect(packagePath).toBeTruthy()
       })
     })
   })

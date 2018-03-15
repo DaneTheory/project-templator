@@ -3,7 +3,7 @@ import * as mockFs from 'mock-fs'
 import * as path from 'path'
 import {
   npmFindPackagePath
-} from '../../../../src/extends/strategies/npm'
+} from '../../../../../src/templates/lookup/strategies/npm'
 
 import {
   fakeFs
@@ -20,31 +20,31 @@ describe('npm traverse', () => {
     // some config
   }
 
-  const fixturesPath = path.join(__dirname, '../../', 'fixtures')
+  // const fixturesPath = path.join(__dirname, '../../', 'fixtures')
+  // const projectPath = path.join(fixturesPath, 'project')
+  // const packagesPath = path.join(projectPath, 'packages')
+  // const mainPackagePath = path.join(packagesPath, 'main-templates')
+  // const sisterPackagePath = path.resolve(path.join(packagesPath, 'sister-templates'))
+  // const parentPackagePath = path.resolve(path.join(projectPath, 'node_modules', 'parent-templates'))
 
-  const projectPath = path.join(fixturesPath, 'project')
-  const packagesPath = path.join(projectPath, 'packages')
-  const mainPackagePath = path.join(packagesPath, 'main-templates')
+  const fakePaths: any = {
+  }
+  fakePaths.project = 'project'
+  fakePaths.packages = path.join(fakePaths.project, 'packages')
 
   const packageName: any = {
     none: 'unknown',
+    main: 'main',
     // put in fixtures parent folder (package.json and node_modules)
     parent: 'parent-templates',
     // put in fixtures sibling folder (same package.json and node_modules)
-    sister: 'sister-templates'
+    sister: 'sister-templates',
+    stepsister: 'stepsister-templates'
   }
 
-  const sisterPackagePath = path.resolve(path.join(packagesPath, 'sister-templates'))
-  const parentPackagePath = path.resolve(path.join(projectPath, 'node_modules', 'parent-templates'))
-
-  function createTemplatesPath(filePath: string) {
-    return path.join(filePath, 'templates')
-  }
-
-  const expectedPath = {
-    sister: createTemplatesPath(sisterPackagePath),
-    parent: createTemplatesPath(parentPackagePath)
-  }
+  fakePaths.main = path.join(fakePaths.packages, packageName.main)
+  fakePaths.sister = path.join(fakePaths.packages, packageName.sister)
+  fakePaths.stepsister = path.join(fakePaths.sister, 'node_modules', packageName.stepsister)
 
   // npmFindPackage(packageName: string, config: any = {}): Promise<IPackageFindResult>
   describe('npmFindPackage', () => {
@@ -59,14 +59,14 @@ describe('npm traverse', () => {
     describe('matching package in sister folder', () => {
       it('finds matching package', async () => {
         const pkgPath: any = await npmFindPackagePath(packageName.sister, config)
-        expect(pkgPath).toEqual(sisterPackagePath)
+        expect(pkgPath).toEqual(fakePaths.sister)
       })
     })
 
     describe('matching package in parent folder', () => {
       it('finds matching package', async () => {
         const pkgPath: any = await npmFindPackagePath(packageName.parent, config)
-        expect(pkgPath).toEqual(parentPackagePath)
+        expect(pkgPath).toEqual(fakePaths.parent)
       })
     })
   })

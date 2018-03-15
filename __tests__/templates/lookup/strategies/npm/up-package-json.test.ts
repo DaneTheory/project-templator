@@ -3,7 +3,7 @@ import * as path from 'path'
 import {
   npmFindPackageResultsViaPackageJson,
   npmFindPackageViaPackageJson
-} from '../../../../src/extends/strategies/npm/up-package-json'
+} from '../../../../../src/templates/lookup/strategies/npm/up-package-json'
 
 import {
   fakeFs
@@ -56,11 +56,11 @@ describe('npm traverse', () => {
       })
     })
 
-    describe('matching package in sister folder', () => {
-      it('finds matching package', async () => {
+    describe('sister folder', () => {
+      it('can not be found via package.json parent folder traversal strategy', async () => {
         const searchResult: any = await npmFindPackageResultsViaPackageJson(packageName.sister, config)
         expect(searchResult.found).toBeFalsy()
-        expect(searchResult.packagePath).toEqual(sisterPackagePath)
+        expect(searchResult.dir).toBeFalsy()
       })
     })
 
@@ -82,10 +82,10 @@ describe('npm traverse', () => {
       })
     })
 
-    describe('matching package in sister folder', () => {
-      it('finds matching package path', async () => {
+    describe('sister folder', () => {
+      it('can not be found via package.json parent folder traversal strategy', async () => {
         const packagePath: string = await npmFindPackageViaPackageJson(packageName.sister, config)
-        expect(packagePath).toBe(expectedPath.sister)
+        expect(packagePath).toBeUndefined()
       })
     })
 

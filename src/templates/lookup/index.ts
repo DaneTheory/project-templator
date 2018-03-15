@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import {
   readPackageJsonAt
-} from '../templates/read-src'
+} from '../read-src'
 import {
   findPackagePath
 } from './strategies'
