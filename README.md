@@ -25,6 +25,25 @@ yarn add project-templator
 npm install project-templator -S
 ```
 
+## Overview
+
+Templating is performed via a pipeline of steps that can easily be re-composed or extended to fit your needs. The default pipeline (chain) consists of the following steps.
+
+- collect entries
+- normalize paths
+- gather entry details,
+- check for template file overlap
+- filter entries to ignore
+- render (or read) template file
+- validate
+- write entry to destination
+
+Each of these built-in pipeline steps are functions that can all be found in `src/exectute`.
+
+### Extending template packages
+
+The `src/extends` folder contains (experimental) functionality to collect entries from multiple template packages (ie. allowing packages to extend other packages). See more info in [/docs]().
+
 ## Usage
 
 Use `projectTemplates` to run templating on one or more src -> destination

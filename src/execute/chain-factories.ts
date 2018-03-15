@@ -30,8 +30,8 @@ const chainFactories = {
   checkOverlap,
   filterIgnore,
   templateRenderer,
-  entryToDestWriter,
-  validate
+  validate,
+  entryToDestWriter
 }
 
 export {
