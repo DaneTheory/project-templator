@@ -16,10 +16,17 @@ function defaultTemplatesPath(moduleFilePath: string) {
 }
 
 interface IFindTemplatesResult {
+  extendsPackages: string[]
   packageFilePath: string
   templatesPath: string
   pkg: any
   found: boolean
+}
+
+function normalizeToArray(value: any) {
+  if (typeof value === 'string') return [value]
+  if (Array.isArray(value)) return value
+  return []
 }
 
 /**
@@ -35,8 +42,9 @@ export async function findTemplatesPathFor(packageName: string, options: any = {
   if (options.validateTemplatesPkg) {
     options.validateTemplatesPkg({ pkg, packageFilePath })
   }
-
-  const templatesPath = ((pkg.templates || {}).config || {}).templatesPath || defaultTemplatesPath(packageFilePath)
+  const templatesConfig: any = (pkg.templates || {}).config || {}
+  const templatesPath = templatesConfig.templatesPath || defaultTemplatesPath(packageFilePath)
+  const extendsPackages = normalizeToArray(templatesConfig.extends)
 
   let found: boolean
   try {
@@ -46,6 +54,7 @@ export async function findTemplatesPathFor(packageName: string, options: any = {
     found = false
   }
   return {
+    extendsPackages,
     packageFilePath,
     templatesPath,
     pkg,
