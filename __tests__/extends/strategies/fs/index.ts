@@ -1,4 +1,4 @@
-export const fs = {
+export const fakeFs = {
   project: {
     node_modules: {
       'parent-templates': {

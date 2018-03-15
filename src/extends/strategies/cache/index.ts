@@ -4,11 +4,11 @@ import * as path from 'path'
 
 import {
   npmFindPackageViaPackagesFolder,
-} from './npm/packages-folder'
+} from '../npm/packages-folder'
 
 import {
   filterFoundPackages
-} from './npm/find-package'
+} from '../npm/find-package'
 
 function saoCachePath(dir: string) {
   return path.join(userHome, '.sao', dir)

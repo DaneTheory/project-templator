@@ -1,9 +1,9 @@
+
 import * as mockFs from 'mock-fs'
 import * as path from 'path'
 import {
-  npmFindPackageResultsViaPackageJson,
-  npmFindPackageViaPackageJson
-} from '../../../../src/extends/strategies/npm/up-package-json'
+  npmFindPackagePath
+} from '../../../../src/extends/strategies/npm'
 
 import {
   fakeFs
@@ -51,48 +51,22 @@ describe('npm traverse', () => {
 
     describe('no matching package to be found', () => {
       it('aborts with empty result, ie. found: false', async () => {
-        const searchResult: any = await npmFindPackageResultsViaPackageJson(packageName.none, config)
-        expect(searchResult.found).toBeFalsy()
+        const pkgPath: any = await npmFindPackagePath(packageName.none, config)
+        expect(pkgPath).toBeFalsy()
       })
     })
 
     describe('matching package in sister folder', () => {
       it('finds matching package', async () => {
-        const searchResult: any = await npmFindPackageResultsViaPackageJson(packageName.sister, config)
-        expect(searchResult.found).toBeFalsy()
-        expect(searchResult.packagePath).toEqual(sisterPackagePath)
+        const pkgPath: any = await npmFindPackagePath(packageName.sister, config)
+        expect(pkgPath).toEqual(sisterPackagePath)
       })
     })
 
     describe('matching package in parent folder', () => {
       it('finds matching package', async () => {
-        const searchResult: any = await npmFindPackageResultsViaPackageJson(packageName.parent, config)
-        expect(searchResult.found).toBeFalsy()
-        expect(searchResult.packagePath).toEqual(parentPackagePath)
-      })
-    })
-  })
-
-  // npmFindTemplatesPackagePath(packageName: string, config: any = {}): Promise<string>
-  describe('npmFindTemplatesPackagePath', () => {
-    describe('no matching package to be found', () => {
-      it('aborts with no package path', async () => {
-        const packagePath: string = await npmFindPackageViaPackageJson(packageName.none, config)
-        expect(packagePath).toBeFalsy()
-      })
-    })
-
-    describe('matching package in sister folder', () => {
-      it('finds matching package path', async () => {
-        const packagePath: string = await npmFindPackageViaPackageJson(packageName.sister, config)
-        expect(packagePath).toBe(expectedPath.sister)
-      })
-    })
-
-    describe('matching package in parent folder', () => {
-      it('finds matching package path', async () => {
-        const packagePath: string = await npmFindPackageViaPackageJson(packageName.parent, config)
-        expect(packagePath).toBeFalsy()
+        const pkgPath: any = await npmFindPackagePath(packageName.parent, config)
+        expect(pkgPath).toEqual(parentPackagePath)
       })
     })
   })
