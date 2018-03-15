@@ -1,0 +1,6 @@
+{
+  "name": "project",
+  "devDependencies": {
+    "parent-templates": "1.0.0"
+  }
+}

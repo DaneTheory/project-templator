@@ -7,11 +7,12 @@ describe('render templates', () => {
   const config = {
 
   }
-
-  const filePath = path.join(__dirname, 'templates', 'my-template.ect')
+  // TODO: extract to avoid duplication in tests
+  const templatesPath = path.join(__dirname, '../../../../', 'fixtures', 'templates')
+  const templateFilePath = path.join(templatesPath, 'my-template.js.ect')
 
   const entry = {
-    filePath
+    filePath: templateFilePath
   }
   const entries = [entry]
 

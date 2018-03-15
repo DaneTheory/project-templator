@@ -133,3 +133,8 @@ When Project templator resolves the template sources, it will "merge" the files 
 
 You may incorporate conflict resolution strategies such as using the template package version or simply first (or last) wins etc.
 
+## Implementation
+
+Some logic for extending/merging templates from multiple sources can be found in [package-retriever](https://github.com/kristianmandrup/package-retriever/blob/master/src/extend/index.ts)
+
+Please help make this happen!

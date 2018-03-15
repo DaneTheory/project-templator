@@ -7,6 +7,10 @@ import {
   findTemplatesPackagePath
 } from './strategies'
 
+export {
+  findTemplatesPackagePath
+}
+
 function defaultTemplatesPath(moduleFilePath: string) {
   return path.join(moduleFilePath, 'templates')
 }

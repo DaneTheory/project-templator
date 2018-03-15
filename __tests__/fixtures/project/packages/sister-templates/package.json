@@ -1,0 +1,10 @@
+{
+  "name": "sister-templates",
+  "version": "1.0.0",
+  "project-templator": {
+    "templatesPath": "templates",
+    "extends": [
+      "stepsister-templates"
+    ]
+  }
+}

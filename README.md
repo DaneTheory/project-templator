@@ -3,9 +3,18 @@
 Next generation templating/transformation engine and pipeline system.
 Transform a set of entries into side effects, such as writing or modifying files in a project.
 
-Project templator has been designed to be highly customizable and composable, making minimum assumptions on end use. It has been designed for easy integration with other libraries.
+*Project templator* has been designed to be highly customizable and composable, making minimum assumptions on end use scenarios.
 
-The basic configuration can be used to take a set of templates from one or more folders, render each with relevant data parameters and write the result to files in one or more destination folders.
+The basic pipeline configuration can be used to:
+
+- take a set of templates from one or more template sources
+- create entries (entry objects) from the templates
+- iterate the entries
+  - find relevant data parameters for each entry
+  - render or transform each entry to data/content using a template engine/transformer for the entry
+  - further transform the entry data, such as appending or prepending additional content/data
+  - validate the final entry data to be used
+  - write the valid entry/data to one or more destinations
 
 ## Requirements
 
@@ -30,25 +39,53 @@ npm install project-templator -S
 Templating is performed via a pipeline of steps that can easily be re-composed or extended to fit your needs. The default pipeline (chain) consists of the following steps.
 
 - collect entries
-- normalize paths
-- gather entry details,
-- check for template file overlap
-- filter entries to ignore
+- normalize entry paths
+- gather entry details
+- check for template file overlap (when stripped from template ext)
+- filter entries to ignore (depending on target prefs or to ignore partials or config files)
 - render (or read) template file
-- validate
-- write entry to destination
+- validate template data/output
+- write entry to destination(s)
 
-Each of these built-in pipeline steps are functions that can all be found in `src/exectute`.
+Each of these built-in pipeline steps are functions that can all be found in `src/execute`.
+An entry is simply an object. Here is an example of the core attributes of an entry, created via the built-in *entry details* pipeline step (function).
+
+```js
+{
+  // ...
+  templatePath: '/src/helpers/service-finder.ts.ect',
+  filePath: 'src/helpers/service-finder.test.ts',
+  name: 'service-finder',
+  fileName: 'service-finder.ts',
+  fileExt: 'ts',
+  dirName: 'src/helpers',
+  action: {
+    src: 'render',
+    dest: 'write'
+  },
+  fileType: 'template',
+  type: {
+    file: 'test:src', // create your own convention
+    folder: 'helpers',
+    entity: 'service'
+  },
+  // ...
+}
+```
+
+You can customize or extend what goes into an entry to fit your own needs. See the [Entries.md](https://github.com/kristianmandrup/project-templator/tree/master/docs/Entries.md) document in [docs](https://github.com/kristianmandrup/project-templator/tree/master/docs) for more details.
 
 ### Extending template packages
 
-The `src/extends` folder contains (experimental) functionality to collect entries from multiple template packages (ie. allowing packages to extend other packages). See more info in [/docs]().
+The `src/extends` folder contains (experimental) functionality to collect entries from multiple template packages (ie. allowing packages to extend other packages). For more info see [docs](https://github.com/kristianmandrup/project-templator/tree/master/docs/Template%20package%20management.md).
+
+Note: Template package extension is not yet fully implemented :()
 
 ## Usage
 
-Use `projectTemplates` to run templating on one or more src -> destination
+Use the `projectTemplates` function to run a templating pipeline with a configuration.
 
-On a single src -> destination, named `src`
+Example: Single src -> destination, named `src`
 
 ```js
 import {
@@ -95,14 +132,13 @@ projectTemplates({
 
 ## Advanced example
 
-Say we have a template with the following structure.
-We have variants for the source files, ie. :
+Say we have a template with the following structure, containing variants for each source file and having test file templates for both `ava` and `jest`:
 
 - `.ts` when using TypeScript
 - `.js` when using CommonJS
-- `.mjs` when using ES6 modules and ES2015+ javascript
+- `.mjs` when using ES6 modules
 
-```bash
+```sh
 /template
   /src
     index.ts.ect
@@ -120,7 +156,7 @@ We have variants for the source files, ie. :
 
 We would like the following project build output:
 
-```bash
+```sh
 /my/target
   /src
     index.ts
@@ -129,6 +165,8 @@ We would like the following project build output:
   /__tests__
     my-jest.test.js
 ```
+
+To handle this, we can then pass a configuration as follows:
 
 ```js
 projectTemplate({
@@ -139,58 +177,33 @@ projectTemplate({
     entry.destExt = entry.fileExt === 'js' ? entry.opts.srcExt : entry.fileExt
     return entry
   },
-  // select template file to use based on srcExt option
   resolve: {
-    templateFile({destExt, name}) {
-      return path.join(name, destExt)
+    templateFile({destExt, srcExt, name}) {
+      // select template file to use based on destExt option
+      // so if we intend to write to a .ts dest file, ie. index.ts,
+      // we would use the template: index.ts.ect
+      return path.join(name, `.${destExt}`, `.${srcExt}`)
     }
   },
-  // ignore template files in folders that don't match convention of test library used
-  // also ignore any files in a /partials folder
+
   ignore({dirName}) {
+    // ignore any files in a /partials folder
     if (dirname.test(/partials/)) return true
+    // ignore template files in folders that don't match convention of test library used
     return opts.testLib === 'jest' ? dirName.test(/__tests__/) : dirName.test(/test/)
   },
   // renames any files that have .js extension to .ts in target dest
   // via populateEntry custom destExt option
   destPath({ext, destExt, dirName}) {
-    return path.join(opts.rootBuildPath, dirName, name, destExt)
+    return path.join(opts.rootDestPath, dirName, name, destExt)
   },
   opts: {
     srcExt: 'ts', // used by resolveTemplateFile via populateEntry
-    rootBuildPath: '/path/to/build', // used by buildPath
+    rootDestPath: '/path/to/target/project', // used by destPath
     testLib: 'ava' // used by ignore
   },
   params: {
-    filePath: {
-      'src/index.js': {
-      }
-    },
-    name: {
-      index: {
-        firstParam: 'First param value',
-        secondParam: 'Second param value',
-      },
-    },
-    type: {
-      folder: {
-        test: {
-          // ...
-        }
-      },
-      file: {
-        src(entry) {
-          return {
-            // dynamic params based on entry
-          }
-        }
-      },
-      entity: {
-        service: {
-          // ...
-        }
-      }
-    }
+    // nested params configuration
   }
 })
 ```
