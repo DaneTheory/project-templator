@@ -4,11 +4,11 @@ import {
   readPackageJsonAt
 } from '../templates/read-src'
 import {
-  findTemplatesPackagePath
+  findPackagePath
 } from './strategies'
 
 export {
-  findTemplatesPackagePath
+  findPackagePath
 }
 
 function defaultTemplatesPath(moduleFilePath: string) {
@@ -16,22 +16,27 @@ function defaultTemplatesPath(moduleFilePath: string) {
 }
 
 interface IFindTemplatesResult {
-  moduleFilePath: string
+  packageFilePath: string
   templatesPath: string
   pkg: any
   found: boolean
 }
 
-export async function findTemplatesFor(packageName: string, options: any = {}): Promise<IFindTemplatesResult> {
-  const moduleFilePath = await findTemplatesPackagePath(packageName, options)
-  const pkg = await readPackageJsonAt(moduleFilePath)
+/**
+ * Find the templatesPath and package.json for a templates package, using different strategies
+ * @param packageName Path to the package (ie. node/npm module)
+ * @param options
+ */
+export async function findTemplatesPathFor(packageName: string, options: any = {}): Promise<IFindTemplatesResult> {
+  const packageFilePath = await findPackagePath(packageName, options)
+  const pkg = await readPackageJsonAt(packageFilePath)
 
   // optionally validate that it "looks" like a valid templates package
   if (options.validateTemplatesPkg) {
-    options.validateTemplatesPkg({ pkg, moduleFilePath })
+    options.validateTemplatesPkg({ pkg, packageFilePath })
   }
 
-  const templatesPath = ((pkg.templates || {}).config || {}).templatesPath || defaultTemplatesPath(moduleFilePath)
+  const templatesPath = ((pkg.templates || {}).config || {}).templatesPath || defaultTemplatesPath(packageFilePath)
 
   let found: boolean
   try {
@@ -40,9 +45,8 @@ export async function findTemplatesFor(packageName: string, options: any = {}): 
   } catch (err) {
     found = false
   }
-
   return {
-    moduleFilePath,
+    packageFilePath,
     templatesPath,
     pkg,
     found
