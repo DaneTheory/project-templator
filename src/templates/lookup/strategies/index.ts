@@ -15,7 +15,11 @@ const defaults = {
   ]
 }
 
-// See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race
+/**
+ * findPackagePath using package search strategies
+ * @param packageName
+ * @param config
+ */
 export async function findPackagePath(packageName: string, config: any = {}): Promise<string> {
   let {
     packageSearchStrategies

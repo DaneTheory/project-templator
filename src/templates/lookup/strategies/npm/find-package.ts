@@ -9,7 +9,7 @@ import {
 } from '../utils'
 
 const defaults = {
-  packageSearchStrategies: [
+  npmSearchStrategies: [
     npmFindPackageViaPackagesFolder,
     npmFindPackageViaPackageJson
   ]
@@ -23,10 +23,10 @@ const defaults = {
  */
 export async function npmFindPackagePath(packageName: string, config: any = {}): Promise<string> {
   let {
-    packageSearchStrategies
+    npmSearchStrategies
   } = config
-  packageSearchStrategies = packageSearchStrategies || defaults.packageSearchStrategies
-  const promises: Promise<string>[] = packageSearchStrategies.map(async (strategy: Function) => {
+  npmSearchStrategies = npmSearchStrategies || defaults.npmSearchStrategies
+  const promises: Promise<string>[] = npmSearchStrategies.map(async (strategy: Function) => {
     return await strategy(packageName, config)
   })
   return filterFoundPackages(await Promise.all(promises))
