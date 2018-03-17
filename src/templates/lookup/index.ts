@@ -8,7 +8,7 @@ import {
 } from '../read-src'
 import {
   findPackagePath
-} from './strategies'
+} from '../../packages/lookup/strategies'
 
 export {
   findPackagePath

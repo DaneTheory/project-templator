@@ -2,15 +2,14 @@
 import * as mockFs from 'mock-fs'
 import * as path from 'path'
 import {
-  findTemplatesPathFor,
-  // findPackagePath
-} from '../../../../src/templates/lookup'
+  npmFindPackagePath
+} from '../../../../../src/packages/lookup/strategies/npm'
 
 import {
   fakeFs
-} from './fs'
+} from '../../../../fixtures/fs'
 
-describe('templates lookup', () => {
+describe('npm traverse', () => {
 
   // TODO: use mockFs
   beforeAll(() => {
@@ -21,6 +20,12 @@ describe('templates lookup', () => {
     // some config
   }
 
+  // const fixturesPath = path.join(__dirname, '../../', 'fixtures')
+  // const projectPath = path.join(fixturesPath, 'project')
+  // const packagesPath = path.join(projectPath, 'packages')
+  // const mainPackagePath = path.join(packagesPath, 'main-templates')
+  // const sisterPackagePath = path.resolve(path.join(packagesPath, 'sister-templates'))
+  // const parentPackagePath = path.resolve(path.join(projectPath, 'node_modules', 'parent-templates'))
 
   const fakePaths: any = {
   }
@@ -41,36 +46,27 @@ describe('templates lookup', () => {
   fakePaths.sister = path.join(fakePaths.packages, packageName.sister)
   fakePaths.stepsister = path.join(fakePaths.sister, 'node_modules', packageName.stepsister)
 
-
-  function createTemplatesPath(filePath: string) {
-    return path.join(filePath, 'templates')
-  }
-
-  const templatesPath = {
-    sister: createTemplatesPath(fakePaths.sister),
-    parent: createTemplatesPath(fakePaths.parent)
-  }
-
-  describe('findTemplatesPathFor', () => {
+  // npmFindPackage(packageName: string, config: any = {}): Promise<IPackageFindResult>
+  describe('npmFindPackage', () => {
 
     describe('no matching package to be found', () => {
       it('aborts with empty result, ie. found: false', async () => {
-        const pkgPath: any = await findTemplatesPathFor(packageName.none, config)
+        const pkgPath: any = await npmFindPackagePath(packageName.none, config)
         expect(pkgPath).toBeFalsy()
       })
     })
 
     describe('matching package in sister folder', () => {
       it('finds matching package', async () => {
-        const pkgPath: any = await findTemplatesPathFor(packageName.sister, config)
-        expect(pkgPath).toEqual(templatesPath.sister)
+        const pkgPath: any = await npmFindPackagePath(packageName.sister, config)
+        expect(pkgPath).toEqual(fakePaths.sister)
       })
     })
 
     describe('matching package in parent folder', () => {
       it('finds matching package', async () => {
-        const pkgPath: any = await findTemplatesPathFor(packageName.parent, config)
-        expect(pkgPath).toEqual(templatesPath.parent)
+        const pkgPath: any = await npmFindPackagePath(packageName.parent, config)
+        expect(pkgPath).toEqual(fakePaths.parent)
       })
     })
   })

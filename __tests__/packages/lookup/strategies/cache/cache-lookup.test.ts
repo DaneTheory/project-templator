@@ -3,13 +3,13 @@ import * as path from 'path'
 // async function cacheLookup(packageName: string, options: any): Promise<string>
 import {
   cacheLookup
-} from '../../../../../src/templates/lookup/strategies/cache'
+} from '../../../../../src/packages/lookup/strategies/cache'
 
 // Uses conventions from sao (or package-retriever) to locate package in "global" cache
 
 import {
   fakeFs
-} from '../fs'
+} from '../../../../fixtures/fs'
 
 describe('cache lookup', () => {
 

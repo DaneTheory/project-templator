@@ -2,11 +2,11 @@ import * as mockFs from 'mock-fs'
 import * as path from 'path'
 import {
   npmFindPackageViaPackagesFolder
-} from '../../../../../src/templates/lookup/strategies/npm/packages-folder'
+} from '../../../../../src/packages/lookup/strategies/npm/packages-folder'
 
 import {
   fakeFs
-} from '../fs'
+} from '../../../../fixtures/fs'
 
 describe('npm traverse', () => {
 

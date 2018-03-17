@@ -3,11 +3,11 @@ import * as path from 'path'
 import {
   npmFindPackageResultsViaPackageJson,
   npmFindPackageViaPackageJson
-} from '../../../../../src/templates/lookup/strategies/npm/up-package-json'
+} from '../../../../../src/packages/lookup/strategies/npm/up-package-json'
 
 import {
   fakeFs
-} from '../fs'
+} from '../../../../fixtures/fs'
 
 describe('npm traverse', () => {
 
